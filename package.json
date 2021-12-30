@@ -1,0 +1,60 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app/main.js",
+  "scripts": {
+    "start": "webpack && electron-forge start",
+    "package": "webpack && electron-forge package",
+    "make": "webpack && electron-forge make"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "css-loader": "^6.5.1",
+    "electron": "^16.0.2",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "svelte": "^3.44.2",
+    "svelte-loader": "^3.1.2",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1",
+    "webpack-html-plugin": "^0.1.1"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electron"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
