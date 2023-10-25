@@ -1,18 +1,17 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import sqlite3NotVerbose from 'sqlite3';
-import handlerConfiguration from "./ipc/HandlerConfiguration.js";
+import sqlite3 from 'sqlite3';
 import handlerConfigurer from "./ipc/HandlerConfigurer.js";
+import appConfigurer from './configuration/AppConfigurer.js';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-const sqlite3 = sqlite3NotVerbose.verbose();
-const db = new sqlite3.Database('flashcards.db');
-
-db.serialize(() => {
-
-});
+const configureBackend = () => {
+    const database = new (sqlite3.verbose()).Database('flashcards.db');
+    const objects = appConfigurer.configure(database).getObjects();
+    handlerConfigurer.configure(ipcMain, objects);
+}
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -29,8 +28,7 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
-    handlerConfigurer.configure(ipcMain, handlerConfiguration);
-
+    configureBackend();
     createWindow();
 
     app.on('activate', () => {

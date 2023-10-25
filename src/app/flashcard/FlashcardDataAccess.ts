@@ -1,14 +1,22 @@
-import { sqlite3 } from "sqlite3";
+import { Database } from "sqlite3";
 import Flashcard from "./Flashcard.js";
 
 export default class FlashcardDataAccess {
-    sqlite3: sqlite3;
+    database: Database;
     
-    constructor(sqlite3: sqlite3) {
-        this.sqlite3 = sqlite3;
+    constructor(database: Database) {
+        this.database = database;
     }
     
-    create(flashcard: Flashcard) {
+    async create(flashcard: Flashcard) {
+        const stmt = this.database.prepare(
+            'INSERT INTO flashcard (flashcard_id, flashcard_prompt, flashcard_answer) VALUES (?, ?, ?)');
+        stmt.run(flashcard.id, flashcard.prompt, flashcard.answer);
         
+    }
+
+    async read(id: string) {
+        const stmt = this.database.prepare('SELECT * FROM flashcard WHERE id = ?');
+        stmt.run(id);
     }
 }

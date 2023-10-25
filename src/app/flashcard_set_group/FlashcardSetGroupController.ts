@@ -1,20 +1,20 @@
 import { IpcMainInvokeEvent } from 'electron';
 import Controller from '../ipc/Controller.js';
 import HandlerMapping from '../ipc/HandlerMapping.js';
-import FlashcardService from './FlashcardService.js';
+import FlashcardSetGroupService from "./FlashcardSetGroupService.js";
 
-export default class FlashcardController extends Controller {
-    flaschardService: FlashcardService;
+export default class FlashcardSetGroupController extends Controller {
+    flaschardSetGroupService: FlashcardSetGroupService;
     
-    constructor(flashcardService: FlashcardService) {
+    constructor(flashcardSetGroupService: FlashcardSetGroupService) {
         super();
-        this.flaschardService = flashcardService;
+        this.flaschardSetGroupService = flashcardSetGroupService;
     }
     getHandlerMappings(): HandlerMapping[] {
         return [
             {
                 method: 'GET',
-                route: '/hello',
+                route: '/hello2',
                 handler: (event: IpcMainInvokeEvent, val: string) => {
                     console.log(val);
                     return new Promise((res, rej) => res(val.toUpperCase()));

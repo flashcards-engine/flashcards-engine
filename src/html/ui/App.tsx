@@ -4,7 +4,7 @@ import { MouseEvent } from 'react';
 export default function App() {
     const handleClick = (event: MouseEvent): void => {
         const input = event.currentTarget.nextSibling as HTMLInputElement;
-        window.api['GET']['/hello'](input.value);
+        console.debug(window.api['GET']['/hello'](input.value));
     };
     
     return (

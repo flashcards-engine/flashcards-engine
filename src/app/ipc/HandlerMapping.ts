@@ -1,4 +1,4 @@
-import {IpcMainInvokeEvent} from "electron";
+import { IpcMainInvokeEvent } from "electron";
 import Method from "../../common/types/Method.js";
 
 type IpcMainHandler = (event: IpcMainInvokeEvent, ...args: any[]) => (Promise<any>) | (any);

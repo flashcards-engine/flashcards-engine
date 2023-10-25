@@ -1,6 +1,6 @@
 CREATE TABLE flashcard_set_group (
     flashcard_set_group_id TEXT PRIMARY KEY,
-    flashcard_set_group_parent_id TEXT NOT NULL,
+    flashcard_set_group_parent_id TEXT,
     flashcard_set_group_name TEXT NOT NULL
 );
 
@@ -30,4 +30,3 @@ CREATE TABLE flashcard_set_flashcard (
         REFERENCES flashcard (flashcard_id)
         ON DELETE CASCADE
 );
-
