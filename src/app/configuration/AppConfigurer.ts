@@ -49,7 +49,7 @@ export default {
                 flashcardController: new FlashcardController(services.flashcardService),
             };
 
-            const initializer = new Initializer(services.flashcardSetGroupService);
+            const initializer = new Initializer(daos.flashcardSetGroupDataAccess);
 
             objects = {
                 ...daos,

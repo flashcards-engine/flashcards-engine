@@ -1,5 +1,5 @@
 import FlashcardSetGroupDataAccess from "./FlashcardSetGroupDataAccess.js";
-import FlashcardSetGroupModel from "./FlashcardSetGroupModel.js";
+import FlashcardSetGroupModel from "../../common/types/FlashcardSetGroupModel.js";
 
 
 export default class FlashcardSetGroupService {
@@ -22,6 +22,11 @@ export default class FlashcardSetGroupService {
     }
 
     async create(flashcardSetGroup: FlashcardSetGroupModel) {
-        return this.flashcardSetGroupDataAccess.create(flashcardSetGroup);
+        return new Promise((resolve, reject) => {
+            if (!flashcardSetGroup.parentId) {
+                reject('Cannot create flashcard_set_group without associated parent');
+            }
+            resolve(this.flashcardSetGroupDataAccess.create(flashcardSetGroup));
+        });
     }
 }

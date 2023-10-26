@@ -9,6 +9,6 @@
         "target": "es6",
         "jsx": "react",
         "allowJs": true,
-        "allowArbitraryExtensions": true
+//        "allowArbitraryExtensions": true
     }
 }

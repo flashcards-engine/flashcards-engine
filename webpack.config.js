@@ -8,7 +8,7 @@ const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development
 
 export default {
     entry: {
-        'ui': './src/html/ui/ui.js',
+        'main': './src/html/Main.js',
         'preload': './src/preload/preload.ts'
     },
     output: {
@@ -25,7 +25,7 @@ export default {
         })
     ],
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js'],
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.less'],
         fallback: {
             fs: false,
             path: false,
@@ -63,7 +63,7 @@ export default {
                     MiniCSSExtractPlugin.loader,
                     'css-loader',
                     'less-loader',
-                ],
+                    ],
             },
         ]
     },

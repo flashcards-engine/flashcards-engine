@@ -1,10 +1,11 @@
+import { IpcRenderer } from 'electron';
 import ipcUtil from "../../common/util/IpcUtil";
 import { API } from "../../common/types/API";
 import RouteMapping from "./RouteMapping";
 
 let api: API;
 
-function getApiFunction(ipcRenderer: any, channel: string): (...args: any[]) => Promise<any> {
+function getApiFunction(ipcRenderer: IpcRenderer, channel: string): (...args: any[]) => Promise<any> {
     return function(...args: any[]) {
         return ipcRenderer.invoke(channel, ...args)
     };
@@ -15,7 +16,7 @@ function initializeApi(): API {
 }
 
 class ApiFactory {
-    getApi(ipcRenderer: any, routes: RouteMapping[]): API {
+    getApi(ipcRenderer: IpcRenderer, routes: RouteMapping[]): API {
         if (!api) {
             api = initializeApi();
         }

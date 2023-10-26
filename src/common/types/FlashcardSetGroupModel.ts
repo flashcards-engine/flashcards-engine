@@ -1,4 +1,6 @@
-import FlashcardSetModel from '../flashcard_set/FlashcardSetModel.js';
+// @ts-ignore
+//import FlashcardSetModel from './FlashcardSetModel';
+import /* webpackIgnore: true */ FlashcardSetModel from './FlashcardSetModel.js';
 
 export default class FlashcardSetGroupModel {
     id?: string;

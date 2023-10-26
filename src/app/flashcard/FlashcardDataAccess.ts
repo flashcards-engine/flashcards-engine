@@ -1,5 +1,5 @@
 import { Database } from "sqlite3";
-import FlashcardModel from "./FlashcardModel.js";
+import FlashcardModel from "../../common/types/FlashcardModel.js";
 
 export default class FlashcardDataAccess {
     database: Database;

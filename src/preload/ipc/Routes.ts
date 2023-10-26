@@ -3,7 +3,7 @@ import RouteMapping from "./RouteMapping";
 const routes: RouteMapping[] = [
     {
         method: 'GET',
-        route: '/hello'
+        route: '/flashcard-set-groups',
     }
 ];
 

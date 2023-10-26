@@ -1,6 +1,6 @@
 import { Database } from 'sqlite3';
 import databaseUtil from "../util/DatabaseUtil.js";
-import FlashcardSetGroupModel from "./FlashcardSetGroupModel.js";
+import FlashcardSetGroupModel from "../../common/types/FlashcardSetGroupModel.js";
 
 const dbName = 'flashcard_set_group';
 
@@ -28,7 +28,6 @@ export default class FlashcardSetGroupDataAccess {
     async readByParentId(id?: string): Promise<FlashcardSetGroupModel> {
         return new Promise((resolve, reject) => {
             const query = id ? sql.readByParentId : sql.readByNullParentId;
-            console.log(query);
             this.database.get(query, (err, row: FlashcardSetGroupModel) => {
                 if (err) {
                     reject(err);

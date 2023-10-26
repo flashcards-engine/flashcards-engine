@@ -7,11 +7,11 @@ import appConfigurer from './configuration/AppConfigurer.js';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-const configureBackend = () => {
+const configureBackend = async () => {
     const database = new (sqlite3.verbose()).Database('flashcards.db');
     const objects = appConfigurer.configure(database).getObjects();
     handlerConfigurer.configure(ipcMain, objects);
-    objects.initializer.initialize();
+    await objects.initializer.initialize();
 }
 
 const createWindow = () => {
@@ -28,8 +28,8 @@ const createWindow = () => {
     win.loadFile('dist/html/index.html');
 }
 
-app.whenReady().then(() => {
-    configureBackend();
+app.whenReady().then(async () => {
+    await configureBackend();
     createWindow();
 
     app.on('activate', () => {

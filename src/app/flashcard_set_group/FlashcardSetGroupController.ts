@@ -5,6 +5,7 @@ import FlashcardSetGroupService from "./FlashcardSetGroupService.js";
 
 interface GetAllQueryParams {
     parentId?: string;
+    isRoot?: boolean;
 }
 
 export default class FlashcardSetGroupController extends Controller {
@@ -20,6 +21,7 @@ export default class FlashcardSetGroupController extends Controller {
                 method: 'GET',
                 route: '/flashcard-set-groups',
                 handler: (event: IpcMainInvokeEvent, query: GetAllQueryParams) => {
+                    console.log('request made with query: ' + query);
                     if (query.hasOwnProperty('parentId')) {
                         return this.flaschardSetGroupService.getByParentId(query.parentId);
                     }
