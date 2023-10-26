@@ -1,4 +1,4 @@
-export default interface FlashcardSetFlashcard {
+export default interface FlashcardSetFlashcardModel {
     id: string;
     flashcardSetId: string;
     flashcardId: string;

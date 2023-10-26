@@ -11,6 +11,7 @@ const configureBackend = () => {
     const database = new (sqlite3.verbose()).Database('flashcards.db');
     const objects = appConfigurer.configure(database).getObjects();
     handlerConfigurer.configure(ipcMain, objects);
+    objects.initializer.initialize();
 }
 
 const createWindow = () => {
@@ -36,6 +37,8 @@ app.whenReady().then(() => {
             createWindow();
         }
     });
+
+    console.info('Flashcards application started');
 });
 
 app.on('window-all-closed', () => {

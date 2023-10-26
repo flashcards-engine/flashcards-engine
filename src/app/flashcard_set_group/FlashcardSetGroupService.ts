@@ -1,5 +1,5 @@
 import FlashcardSetGroupDataAccess from "./FlashcardSetGroupDataAccess.js";
-import FlashcardSetGroup from "./FlashcardSetGroup.js";
+import FlashcardSetGroupModel from "./FlashcardSetGroupModel.js";
 
 
 export default class FlashcardSetGroupService {
@@ -9,7 +9,19 @@ export default class FlashcardSetGroupService {
         this.flashcardSetGroupDataAccess = flashcardSetGroupDataAccess;
     }
 
-    async create(flashcardSetGroup: FlashcardSetGroup) {
+    async getByParentId(flashcardSetGroupParentId?: string) {
+        return this.flashcardSetGroupDataAccess.readByParentId(flashcardSetGroupParentId);
+    }
+
+    async get(flashcardSetGroupId: string) {
+        return this.flashcardSetGroupDataAccess.read(flashcardSetGroupId);
+    }
+
+    async getByName(flashcardSetGroupName: string): Promise<FlashcardSetGroupModel> {
+        return this.flashcardSetGroupDataAccess.readByName(flashcardSetGroupName);
+    }
+
+    async create(flashcardSetGroup: FlashcardSetGroupModel) {
         return this.flashcardSetGroupDataAccess.create(flashcardSetGroup);
     }
 }

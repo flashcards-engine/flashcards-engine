@@ -9,6 +9,7 @@ import FlashcardService from "../flashcard/FlashcardService.js";
 import FlashcardSetGroupController from '../flashcard_set_group/FlashcardSetGroupController.js';
 import FlashcardSetController from '../flashcard_set/FlashcardSetController.js';
 import FlashcardController from "../flashcard/FlashcardController.js";
+import Initializer from "./Initializer.js";
 
 export interface Objects {
     [key: string]: any;
@@ -20,6 +21,7 @@ export default {
         database: Database
     ): typeof this {
         if (!objects) {
+            console.info('Configuring application objects...')
             const daos = {
                 flashcardSetGroupDataAccess: new FlashcardSetGroupDataAccess(database),
                 flashcardSetDataAccess: new FlashcardSetDataAccess(database),
@@ -47,7 +49,18 @@ export default {
                 flashcardController: new FlashcardController(services.flashcardService),
             };
 
-            objects = {...daos, ...services, ...controllers };
+            const initializer = new Initializer(services.flashcardSetGroupService);
+
+            objects = {
+                ...daos,
+                ...services,
+                ...controllers,
+                initializer
+            };
+            for (const objectName in objects) {
+                console.info(`Initialized object: ${objectName} of type ${objects[objectName].constructor.name}`);
+            }
+            console.info('Application objects configured.');
         }
         return this;
     },

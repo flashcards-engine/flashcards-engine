@@ -3,6 +3,10 @@ import Controller from '../ipc/Controller.js';
 import HandlerMapping from '../ipc/HandlerMapping.js';
 import FlashcardSetGroupService from "./FlashcardSetGroupService.js";
 
+interface GetAllQueryParams {
+    parentId?: string;
+}
+
 export default class FlashcardSetGroupController extends Controller {
     flaschardSetGroupService: FlashcardSetGroupService;
     
@@ -14,10 +18,11 @@ export default class FlashcardSetGroupController extends Controller {
         return [
             {
                 method: 'GET',
-                route: '/hello2',
-                handler: (event: IpcMainInvokeEvent, val: string) => {
-                    console.log(val);
-                    return new Promise((res, rej) => res(val.toUpperCase()));
+                route: '/flashcard-set-groups',
+                handler: (event: IpcMainInvokeEvent, query: GetAllQueryParams) => {
+                    if (query.hasOwnProperty('parentId')) {
+                        return this.flaschardSetGroupService.getByParentId(query.parentId);
+                    }
                 }
             }
         ];

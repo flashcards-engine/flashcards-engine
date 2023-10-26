@@ -1,4 +1,4 @@
-export default interface FlashcardSet {
+export default interface FlashcardSetModel {
     id: string;
     groupId: string;
     name: string;

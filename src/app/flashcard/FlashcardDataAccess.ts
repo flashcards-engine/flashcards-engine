@@ -1,5 +1,5 @@
 import { Database } from "sqlite3";
-import Flashcard from "./Flashcard.js";
+import FlashcardModel from "./FlashcardModel.js";
 
 export default class FlashcardDataAccess {
     database: Database;
@@ -8,7 +8,7 @@ export default class FlashcardDataAccess {
         this.database = database;
     }
     
-    async create(flashcard: Flashcard) {
+    async create(flashcard: FlashcardModel) {
         const stmt = this.database.prepare(
             'INSERT INTO flashcard (flashcard_id, flashcard_prompt, flashcard_answer) VALUES (?, ?, ?)');
         stmt.run(flashcard.id, flashcard.prompt, flashcard.answer);
