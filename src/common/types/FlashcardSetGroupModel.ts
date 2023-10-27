@@ -7,7 +7,7 @@ export default class FlashcardSetGroupModel {
     parentId?: string;
     name: string;
     parent?: FlashcardSetGroupModel;
-    children?: FlashcardSetGroupModel[];
+    childGroups?: FlashcardSetGroupModel[];
     flashcardSets?: FlashcardSetModel[];
 }
 

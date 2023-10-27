@@ -29,9 +29,7 @@ class ApiFactory {
             }
             api[method][routeMapping.route] = getApiFunction(ipcRenderer, channel);
         });
-
-        console.debug('api object configured:');
-        console.debug(api);
+        
         return api;
     }
 }
