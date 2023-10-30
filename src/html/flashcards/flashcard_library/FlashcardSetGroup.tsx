@@ -1,75 +1,100 @@
 import * as React from 'react';
 import {useState, MouseEvent} from "react";
 import FlashcardSetGroupModel from "../../../common/types/FlashcardSetGroupModel";
-import {useAppSelector, useAppDispatch} from "../../store/hooks";
-import {selectActiveEntity, setActiveEntity} from "../activeEntitySlice";
 import FlashcardSetModel from "../../../common/types/FlashcardSetModel";
 import EntityType from "../../../common/types/EntityType";
+
+export type OnSelectHandler = (value: FlashcardSetGroupModel | FlashcardSetModel, type: EntityType) => void;
 
 interface Props {
     flashcardSetGroup: FlashcardSetGroupModel;
     isInitiallyOpen?: boolean;
     indentation: number;
+    onSelectHandler: OnSelectHandler;
+    selectableTypes: EntityType[];
+    activeEntityId?: string;
 }
 
-export default function FlashcardSetGroup({flashcardSetGroup, isInitiallyOpen, indentation}: Props) {
+export default function FlashcardSetGroup({flashcardSetGroup, isInitiallyOpen, indentation, onSelectHandler, selectableTypes, activeEntityId}: Props) {
     const [isOpen, setIsOpen] = useState(isInitiallyOpen || false);
-    const [isSelected, setIsSelected] = useState(false);
-    // Draws an arrow: right for closed, down for open
-    // Draws a row which is indented properly
 
-    const activeEntity = useAppSelector(selectActiveEntity);
-    const dispatch = useAppDispatch();
-
-
-    function selectEntity(event: MouseEvent, type: EntityType, activeEntity: FlashcardSetGroupModel | FlashcardSetModel) {
-        dispatch(setActiveEntity({
-            type,
-            value: activeEntity
-        }))
+    const selectFlashcardSetGroup = (event: MouseEvent) => {
+        event.stopPropagation();
+        if (selectableTypes.includes('FLASHCARD_SET_GROUP')) {
+            onSelectHandler(flashcardSetGroup, 'FLASHCARD_SET_GROUP');
+        }
     }
+
+    const handleOpen = (event: MouseEvent) => {
+        setIsOpen(!isOpen);
+    }
+    // Draw an arrow: right for closed, down for open
 
     return (
         <>
             <div
                 id={flashcardSetGroup.id}
-                onClick={(e) => selectEntity(e, 'FLASHCARD_SET_GROUP', flashcardSetGroup)}
+                onClick={selectFlashcardSetGroup}
+                className={
+                    'cursor-pointer ' +
+                    (activeEntityId === flashcardSetGroup.id ? 'selected-entity' : '')
+                }
             >
-                {/* this row */}
+                {Array(indentation).fill(0).map((v, i) => (<span key={i} className="indentation"></span>))}
                 {flashcardSetGroup.name}
             </div>
-            <ChildGroups childGroups={flashcardSetGroup.childGroups} />
-            <FlashcardSets flashcardSets={flashcardSetGroup.flashcardSets} />
+            {
+                /* Draw child FlashcardSetGroups */
+                flashcardSetGroup.childGroups && flashcardSetGroup.childGroups.length > 0 && isOpen
+                    ? flashcardSetGroup.childGroups.map((childGroup =>
+                        <FlashcardSetGroup
+                            flashcardSetGroup={childGroup}
+                            indentation={indentation + 1}
+                            onSelectHandler={onSelectHandler}
+                            selectableTypes={selectableTypes}
+                        />
+                    ))
+                    : null
+            }
+            {
+                /* Draw Flashcard Sets */
+                flashcardSetGroup.flashcardSets && flashcardSetGroup.flashcardSets.length > 0 && isOpen
+                    ? flashcardSetGroup.flashcardSets.map((flashcardSet) =>
+                        <FlashcardSet
+                            flashcardSet={flashcardSet}
+                            selectableTypes={selectableTypes}
+                            onSelectHandler={onSelectHandler}
+                            isSelected={activeEntityId === flashcardSet.id}
+                        />
+                    )
+                    : null
+            }
         </>
     )
 }
 
-interface ChildGroupsProps {
-    childGroups: FlashcardSetGroupModel[];
-}
-
-function ChildGroups({childGroups}: ChildGroupsProps) {
-    if (childGroups && childGroups.length > 0) {
-        return (
-            <>
-
-            </>
-        )
-    }
-    return null;
-}
-
 interface FlashcardSetsProps {
-    flashcardSets: FlashcardSetModel[];
+    flashcardSet: FlashcardSetModel;
+    selectableTypes: EntityType[];
+    onSelectHandler: OnSelectHandler;
+    isSelected: boolean;
 }
 
-function FlashcardSets({flashcardSets}: FlashcardSetsProps) {
-    if (flashcardSets && flashcardSets.length > 0) {
-        return (
-            <>
-
-            </>
-        )
+function FlashcardSet({flashcardSet, selectableTypes, onSelectHandler, isSelected}: FlashcardSetsProps) {
+    const selectFlashcardSet = (event: MouseEvent) => {
+        event.stopPropagation();
+        if (selectableTypes.includes('FLASHCARD_SET')) {
+            onSelectHandler(flashcardSet, 'FLASHCARD_SET');
+        }
     }
-    return null;
+    return (
+        <>
+            <div
+                className={isSelected ? 'selected-entity' : ''}
+                onClick={selectFlashcardSet}
+            >
+                {flashcardSet.name}
+            </div>
+        </>
+    )
 }

@@ -10,12 +10,31 @@ const aliasParentId = 'flashcard_set_group_parent_id AS parentId'
 const aliasAll = `${aliasId}, ${aliasName}, ${aliasParentId}`;
 
 const sql = {
-    readRoot: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_parent_id IS NULL`,
     readRowById: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_id = ?`,
-    readRowByName: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_name = ?`,
     readByParentId: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_parent_id = ?`,
     readByNullParentId: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_parent_id IS NULL`,
     createOne: `INSERT INTO ${dbName} (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES (?, ?, ?)`,
+    readWithChildren: `
+        SELECT
+            set_group.flashcard_set_group_id AS id,
+            set_group.flashcard_set_group_parent_id AS parentId,
+            set_group.flashcard_set_group_name AS name,
+            child_group.flashcard_set_group_id AS childId,
+            child_group.flashcard_set_group_name AS childName
+        FROM 
+            flashcard_set_group set_group
+        LEFT JOIN flashcard_set_group child_group ON
+            child_group.flashcard_set_group_parent_id = set_group.flashcard_set_group_id
+        WHERE set_group.flashcard_set_group_id = ?;
+    `
+}
+
+interface SelectWithChildrenRow {
+    id: string;
+    parentId: string;
+    name: string;
+    childId: string;
+    childName: string;
 }
 
 export default class FlashcardSetGroupDataAccess {
@@ -25,14 +44,14 @@ export default class FlashcardSetGroupDataAccess {
         this.database = database;
     }
 
-    async readByParentId(id?: string): Promise<FlashcardSetGroupModel> {
+    async readByParentId(id?: string): Promise<FlashcardSetGroupModel | undefined> {
         return new Promise((resolve, reject) => {
             const query = id ? sql.readByParentId : sql.readByNullParentId;
             this.database.get(query, (err, row: FlashcardSetGroupModel) => {
                 if (err) {
                     reject(err);
                 }
-                resolve(row ? row : null);
+                resolve(row);
             });
         });
     }
@@ -49,25 +68,35 @@ export default class FlashcardSetGroupDataAccess {
         });
     }
 
-    async read(id: string): Promise<FlashcardSetGroupModel> {
+    async readWithChildren(id: string): Promise<FlashcardSetGroupModel | undefined> {
         return new Promise((resolve, reject) => {
-            this.database.get(sql.readRowById, id, (err: Error, row: FlashcardSetGroupModel) => {
+            this.database.all(sql.readWithChildren, id, (err: Error, rows: SelectWithChildrenRow[]) => {
                 if (err) {
                     reject(err);
                 }
-                resolve(row ? row : null);
+
+                // Map rows to FlashcardSetGroupModel
+                let flashcardSetGroup: FlashcardSetGroupModel | undefined = undefined;
+                rows.forEach((row) => {
+                    if (!flashcardSetGroup) {
+                        flashcardSetGroup = {
+                            id: row.id,
+                            parentId: row.parentId,
+                            name: row.name,
+                            childGroups: [],
+                            flashcardSets: []
+                        }
+                    }
+                    if (row.childId) {
+                        flashcardSetGroup?.childGroups?.push({
+                            id: row.childId,
+                            name: row.childName
+                        });
+                    }
+                });
+
+                resolve(flashcardSetGroup);
             })
         });
-    }
-
-    async readByName(name: string): Promise<FlashcardSetGroupModel> {
-        return new Promise((resolve, reject) => {
-            this.database.get(sql.readRowByName, name, (err: Error, row: FlashcardSetGroupModel) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(row ? row : null);
-            });
-        })
     }
 }

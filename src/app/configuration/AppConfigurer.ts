@@ -31,7 +31,8 @@ export default {
             
             const services = {
                 flashcardSetGroupService: new FlashcardSetGroupService(
-                    daos.flashcardSetGroupDataAccess
+                    daos.flashcardSetGroupDataAccess,
+                    daos.flashcardSetDataAccess
                 ),
                 flashcardSetService: new FlashcardSetService(
                     daos.flashcardSetDataAccess,

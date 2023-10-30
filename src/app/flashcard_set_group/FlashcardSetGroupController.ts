@@ -8,6 +8,10 @@ interface GetAllQueryParams {
     isRoot?: boolean;
 }
 
+interface GetSingleQueryParams {
+    id: string;
+}
+
 export default class FlashcardSetGroupController extends Controller {
     flaschardSetGroupService: FlashcardSetGroupService;
     
@@ -21,10 +25,16 @@ export default class FlashcardSetGroupController extends Controller {
                 method: 'GET',
                 route: '/flashcard-set-groups',
                 handler: (event: IpcMainInvokeEvent, query: GetAllQueryParams) => {
-                    console.log('request made with query: ' + query);
                     if (query.hasOwnProperty('parentId')) {
                         return this.flaschardSetGroupService.getByParentId(query.parentId);
                     }
+                }
+            },
+            {
+                method: 'GET',
+                route: '/flashcard-set-groups/{id}',
+                handler: (event: IpcMainInvokeEvent, query: GetSingleQueryParams) => {
+                    return this.flaschardSetGroupService.getWithChildEntities(query.id);
                 }
             }
         ];
