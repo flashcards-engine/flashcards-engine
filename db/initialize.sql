@@ -30,3 +30,4 @@ CREATE TABLE flashcard_set_flashcard (
         REFERENCES flashcard (flashcard_id)
         ON DELETE CASCADE
 );
+

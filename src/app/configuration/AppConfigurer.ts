@@ -2,7 +2,6 @@ import { Database } from 'sqlite3';
 import FlashcardSetGroupDataAccess from "../flashcard_set_group/FlashcardSetGroupDataAccess.js";
 import FlashcardSetDataAccess from '../flashcard_set/FlashcardSetDataAccess.js';
 import FlashcardDataAccess from '../flashcard/FlashcardDataAccess.js';
-import FlashcardSetFlashcardDataAccess from '../flashcard_set/FlashcardSetFlashcardDataAccess.js';
 import FlashcardSetGroupService from "../flashcard_set_group/FlashcardSetGroupService.js";
 import FlashcardSetService from '../flashcard_set/FlashcardSetService.js';
 import FlashcardService from "../flashcard/FlashcardService.js";
@@ -26,7 +25,6 @@ export default {
                 flashcardSetGroupDataAccess: new FlashcardSetGroupDataAccess(database),
                 flashcardSetDataAccess: new FlashcardSetDataAccess(database),
                 flashcardDataAccess: new FlashcardDataAccess(database),
-                flashcardSetFlashcardDataAccess: new FlashcardSetFlashcardDataAccess(database),
             };
             
             const services = {
@@ -36,18 +34,24 @@ export default {
                 ),
                 flashcardSetService: new FlashcardSetService(
                     daos.flashcardSetDataAccess,
-                    daos.flashcardSetFlashcardDataAccess
+                    daos.flashcardDataAccess
                 ),
                 flashcardService: new FlashcardService(
                     daos.flashcardDataAccess,
-                    daos.flashcardSetFlashcardDataAccess
                 ),
             };
             
             const controllers = {
-                flashcardSetGroupController: new FlashcardSetGroupController(services.flashcardSetGroupService),
-                flashcardSetController: new FlashcardSetController(services.flashcardSetService),
-                flashcardController: new FlashcardController(services.flashcardService),
+                flashcardSetGroupController: new FlashcardSetGroupController(
+                    services.flashcardSetGroupService
+                ),
+                flashcardSetController: new FlashcardSetController(
+                    services.flashcardSetService
+                ),
+                flashcardController: new FlashcardController(
+                    services.flashcardService,
+                    services.flashcardSetService
+                ),
             };
 
             const initializer = new Initializer(daos.flashcardSetGroupDataAccess);

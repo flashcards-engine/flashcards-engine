@@ -5,4 +5,6 @@ export default interface FlashcardSetModel {
     groupId?: string;
     name?: string;
     flashcards?: FlashcardModel[];
+    createdTime?: number;
+    updatedTime?: number;
 }

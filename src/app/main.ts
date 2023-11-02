@@ -22,6 +22,7 @@ const createWindow = () => {
             preload: path.join(__dirname,'../html', 'preload.bundle.js'),
         },
     });
+//    win.removeMenu();
 
     // Uncomment to run with dev tools at the start
     // win.webContents.openDevTools();

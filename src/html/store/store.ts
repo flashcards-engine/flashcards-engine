@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import flashcardSetGroupReducer from '../flashcards/flashcardSetGroupSlice';
 import activeEntityReducer from '../flashcards/activeEntitySlice';
+import lockInfoReducer from "../flashcards/lockInfoSlice";
 
 const store = configureStore({
     reducer: {
         flashcardSetGroup: flashcardSetGroupReducer,
-        activeEntity: activeEntityReducer
+        activeEntity: activeEntityReducer,
+        lockInfo: lockInfoReducer,
     },
 });
 

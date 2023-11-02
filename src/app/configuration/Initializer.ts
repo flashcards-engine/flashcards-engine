@@ -19,13 +19,12 @@ export default class Initializer {
         console.info('Initializing application state...');
         
         // Create a root flashcard_set_group if it doesn't exist
-        let rootFlashcardSetGroup: FlashcardSetGroupModel = await this.flashcardSetGroupDataAccess.readByParentId(null);
-        if (rootFlashcardSetGroup === null) {
-            rootFlashcardSetGroup = createRootFlashcardSetGroup();
+        let flashcardSetGroups: FlashcardSetGroupModel[] = await this.flashcardSetGroupDataAccess.readByParentId(null);
+        if (flashcardSetGroups && flashcardSetGroups[0] === null) {
+            const rootFlashcardSetGroup = createRootFlashcardSetGroup();
             console.info(`Root flashcard_set_group does not exist. Creating...`);
             await this.flashcardSetGroupDataAccess.create(rootFlashcardSetGroup);
             console.info(`Root flashcard_set_group with id '${rootFlashcardSetGroup.id}' created.`);
-            databaseUtil.setRootUuid(rootFlashcardSetGroup.id);
         }
         
         console.info('Application state initialized.')

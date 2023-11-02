@@ -1,15 +1,16 @@
+import FlashcardModel from "../../common/types/FlashcardModel.js";
 import FlashcardDataAccess from "./FlashcardDataAccess.js";
-import FlashcardSetFlashcardDataAccess from "../flashcard_set/FlashcardSetFlashcardDataAccess.js";
 
 export default class FlashcardService {
     flashcardDataAccess: FlashcardDataAccess;
-    flashcardSetFlashcardDataAccess: FlashcardSetFlashcardDataAccess;
     
     constructor(
         flashcardDataAccess: FlashcardDataAccess,
-        flashcardSetFlashcardDataAccess: FlashcardSetFlashcardDataAccess
     ) {
         this.flashcardDataAccess = flashcardDataAccess;
-        this.flashcardSetFlashcardDataAccess = flashcardSetFlashcardDataAccess;
+    }
+
+    update(flashcard: FlashcardModel) {
+        return this.flashcardDataAccess.update(flashcard);
     }
 }

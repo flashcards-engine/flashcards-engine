@@ -1,19 +1,16 @@
 import { Database } from "sqlite3";
 import FlashcardModel from "../../common/types/FlashcardModel.js";
 
-// const dbName = 'flashcard';
+const dbName = 'flashcard';
 
-// const aliasId = 'flashcard_id AS id'
-// const aliasName = 'flashcard_set_id AS setId'
-// const aliasParentId = 'flashcard_set_group_parent_id AS parentId'
-// const aliasAll = `${aliasId}, ${aliasName}, ${aliasParentId}`;
+const aliasId = 'flashcard_id AS id'
+const aliasPrompt = 'flashcard_prompt AS prompt';
+const aliasAnswer = 'flashcard_answer AS answer';
+const aliasAll = `${aliasId}, ${aliasPrompt}, ${aliasAnswer}`;
 
-// const sql = {
-//     readRowById: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_id = ?`,
-//     readByParentId: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_parent_id = ?`,
-//     readByNullParentId: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_parent_id IS NULL`,
-//     createOne: `INSERT INTO ${dbName} (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES (?, ?, ?)`,
-// }
+const sql = {
+    updateOne: `UPDATE ${dbName} SET flashcard_prompt = ?, flashcard_answer = ? WHERE flashcard_id = ?`,
+}
 
 export default class FlashcardDataAccess {
     database: Database;
@@ -22,14 +19,14 @@ export default class FlashcardDataAccess {
         this.database = database;
     }
 
-    // async readByGroupId(groupId: string): Promise<FlashcardSetModel[]> {
-    //     return new Promise((resolve, reject) => {
-    //         this.database.all(sql.readByGroupId, (err, rows: FlashcardSetModel[]) => {
-    //             if (err) {
-    //                 reject(err);
-    //             }
-    //             resolve(rows);
-    //         });
-    //     });
-    // }
+    update(flashcard: FlashcardModel) {
+        return new Promise((resolve, reject) => {
+            this.database.run(sql.updateOne, flashcard.prompt, flashcard.answer, flashcard.id, (error: Error) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(flashcard);
+            });
+        })
+    }
 }

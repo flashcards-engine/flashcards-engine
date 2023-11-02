@@ -6,5 +6,7 @@ export default class FlashcardSetGroupModel {
     name?: string;
     childGroups?: FlashcardSetGroupModel[];
     flashcardSets?: FlashcardSetModel[];
+    createdTime?: number;
+    updatedTime?: number;
 }
 

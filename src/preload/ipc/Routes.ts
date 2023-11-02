@@ -6,8 +6,32 @@ const routes: RouteMapping[] = [
         route: '/flashcard-set-groups',
     },
     {
+        method: 'POST',
+        route: '/flashcard-set-groups',
+    },
+    {
         method: 'GET',
         route: '/flashcard-set-groups/{id}',
+    },
+    {
+        method: 'PUT',
+        route: '/flashcard-set-groups/{id}',
+    },
+    {
+        method: 'POST',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets',
+    },
+    {
+        method: 'PUT',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}',
+    },
+    {
+        method: 'POST',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards',
+    },
+    {
+        method: 'PUT',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards/{flashcardId}',
     },
 ];
 

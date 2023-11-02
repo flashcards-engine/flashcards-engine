@@ -1,6 +1,6 @@
 import FlashcardSetGroupModel from "../types/FlashcardSetGroupModel";
 
-const selectGroup = (
+const findGroup = (
     group: FlashcardSetGroupModel,
     groupId: string
 ): FlashcardSetGroupModel | undefined => {
@@ -11,14 +11,14 @@ const selectGroup = (
         return;
     }
     for (const childGroup of group.childGroups) {
-        const foundGroup = selectGroup(childGroup, groupId);
+        const foundGroup = findGroup(childGroup, groupId);
         if (foundGroup) {
             return foundGroup;
         }
     }
 };
 
-const selectParentGroup = (
+const findParentGroup = (
     group: FlashcardSetGroupModel,
     groupId: string
 ): FlashcardSetGroupModel | undefined => {
@@ -29,7 +29,7 @@ const selectParentGroup = (
         if (childGroup.id === groupId) {
             return group;
         }
-        const foundGroup = selectParentGroup(childGroup, groupId);
+        const foundGroup = findParentGroup(childGroup, groupId);
         if (foundGroup) {
             return foundGroup;
         }
@@ -37,6 +37,6 @@ const selectParentGroup = (
 };
 
 export default {
-    selectGroup,
-    selectParentGroup,
+    findGroup,
+    findParentGroup,
 }
