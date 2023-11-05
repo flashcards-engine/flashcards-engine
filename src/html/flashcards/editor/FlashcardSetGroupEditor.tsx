@@ -4,6 +4,7 @@ import FlashcardSetGroupModel from "../../../common/types/FlashcardSetGroupModel
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import {selectLockInfo, selectLockTimeout, setLockInfo} from "../lockInfoSlice";
 import {appendChildGroup, appendSet, updateGroup} from '../flashcardSetGroupSlice';
+import {setActiveEntity} from "../activeEntitySlice";
 
 interface FlashcardSetGroupEditorProps {
     flashcardSetGroup: FlashcardSetGroupModel;
@@ -22,19 +23,21 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
     
     if (!lockInfo.isLocked && !groupsAreEqual(baseFlashcardSetGroup, workingFlashcardSetGroup)) {
         dispatch(setLockInfo({isLocked: true}));
-        window.api['PUT']['/flashcard-set-groups/{id}']({
-            id: flashcardSetGroup.id,
-            body: workingFlashcardSetGroup,
-        }).then((updatedFlashcardSetGroup: FlashcardSetGroupModel) => {
-            dispatch(updateGroup({value: updatedFlashcardSetGroup}));
-            setBaseFlashcardSetGroup(updatedFlashcardSetGroup);
-            setTimeout(() => {
+        setTimeout(() => {
+            window.api['PUT']['/flashcard-set-groups/{id}']({
+                id: flashcardSetGroup.id,
+                body: workingFlashcardSetGroup,
+            }).then((updatedFlashcardSetGroup: FlashcardSetGroupModel) => {
+                dispatch(updateGroup({value: updatedFlashcardSetGroup}));
+                setBaseFlashcardSetGroup(updatedFlashcardSetGroup);
+                dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: updatedFlashcardSetGroup}));
+            }).finally(() => {
                 dispatch(setLockInfo({isLocked: false}));
-                }, lockTimeout);
-        });
+            });
+        }, lockTimeout);
     }
     
-    const updateName = (event: ChangeEvent<HTMLInputElement>) => {
+    const updateNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
         if (workingFlashcardSetGroup.name === event.target.value) {
             return;
         }
@@ -44,7 +47,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
         });
     }
     
-    const createSubGroup = (event: MouseEvent) => {
+    const addSubGroupHandler = (event: MouseEvent) => {
         event.stopPropagation();
         dispatch(setLockInfo({isLocked: true}));
         window.api['POST']['/flashcard-set-groups']({
@@ -54,12 +57,18 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
             },
         }).then((newSubGroup) => {
             dispatch(appendChildGroup({value: newSubGroup}));
+            const newBaseFlashcardSetGroup = {
+                ...baseFlashcardSetGroup,
+                childGroups: [...baseFlashcardSetGroup.childGroups, newSubGroup],
+            }
+            setBaseFlashcardSetGroup(newBaseFlashcardSetGroup);
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: newBaseFlashcardSetGroup}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         });
     }
     
-    const createFlashcardSet = (event: MouseEvent) => {
+    const addFlashcardSetHandler = (event: MouseEvent) => {
         event.stopPropagation();
         window.api['POST']['/flashcard-set-groups/{groupId}/flashcard-sets']({
             groupId: baseFlashcardSetGroup.id,
@@ -68,6 +77,12 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
             },
         }).then((newSet) => {
             dispatch(appendSet({value: newSet}));
+            const newBaseFlashcardSetGroup = {
+                ...baseFlashcardSetGroup,
+                flashcardSets: [...baseFlashcardSetGroup.flashcardSets, newSet],
+            }
+            setBaseFlashcardSetGroup(newBaseFlashcardSetGroup);
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: newBaseFlashcardSetGroup}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         });
@@ -85,15 +100,15 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
                             name="name"
                             type="text"
                             defaultValue={flashcardSetGroup.name}
-                            onChange={updateName}
+                            onChange={updateNameHandler}
                             disabled={!flashcardSetGroup.parentId}
                         ></input>
                     </label>
                 </form>
             </div>
             <div className="flex-container flex-gap-5px">
-                <button disabled={lockInfo.isLocked} onClick={createSubGroup}>New sub group</button>
-                <button disabled={lockInfo.isLocked} onClick={createFlashcardSet}>New flashcard set</button>
+                <button disabled={lockInfo.isLocked} onClick={addSubGroupHandler}>New sub group</button>
+                <button disabled={lockInfo.isLocked} onClick={addFlashcardSetHandler}>New flashcard set</button>
             </div>
         </div>
     );

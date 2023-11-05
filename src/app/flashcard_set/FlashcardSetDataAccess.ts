@@ -1,8 +1,8 @@
-import {Database} from "sqlite3";
+import {Database} from "better-sqlite3";
 import FlashcardSetModel from "../../common/types/FlashcardSetModel.js";
 import databaseUtil from "../util/DatabaseUtil.js";
 
-const dbName = 'flashcard_set';
+const tableName = 'flashcard_set';
 
 const aliasId = 'flashcard_set_id AS id'
 const aliasGroupId = 'flashcard_set_group_id AS groupId'
@@ -10,52 +10,6 @@ const aliasName = 'flashcard_set_name AS name'
 const aliasCreatedTime = 'flashcard_set_created_time as createdTime';
 const aliasUpdatedTime = 'flashcard_set_updated_time as updatedTime';
 const aliasAll = `${aliasId}, ${aliasGroupId}, ${aliasName}, ${aliasCreatedTime}, ${aliasUpdatedTime}`;
-
-const sql = {
-    readByGroupId: `SELECT ${aliasAll} FROM ${dbName} WHERE flashcard_set_group_id = ?`,
-    readByGroupIdWithFlashcards: `
-        SELECT
-            flashcard_set.flashcard_set_id AS id,
-            flashcard_set.flashcard_set_group_id AS groupId,
-            flashcard_set.flashcard_set_name AS name,
-            flashcard_set.flashcard_set_created_time as createdTime,
-            flashcard_set.flashcard_set_updated_time as updatedTime,
-            set_to_flashcard.flashcard_id AS flashcardId,
-            flashcard.flashcard_prompt AS flashcardPrompt,
-            flashcard.flashcard_answer AS flashcardAnswer,
-            flashcard.flashcard_created_time as flashcardCreatedTime,
-            flashcard.flashcard_updated_time as flashcardUpdatedTime
-        FROM
-            flashcard_set flashcard_set
-        LEFT JOIN flashcard_set_flashcard set_to_flashcard ON
-            set_to_flashcard.flashcard_set_id = flashcard_set.flashcard_set_id
-        LEFT JOIN flashcard flashcard ON
-            flashcard.flashcard_id = set_to_flashcard.flashcard_id
-        WHERE flashcard_set.flashcard_set_group_id = ?;
-    `,
-    readByIdWithFlashcards: `
-        SELECT
-            flashcard_set.flashcard_set_id AS id,
-            flashcard_set.flashcard_set_group_id AS groupId,
-            flashcard_set.flashcard_set_name AS name,
-            flashcard_set.flashcard_set_created_time as createdTime,
-            flashcard_set.flashcard_set_updated_time as updatedTime,
-            set_to_flashcard.flashcard_id AS flashcardId,
-            flashcard.flashcard_prompt AS flashcardPrompt,
-            flashcard.flashcard_answer AS flashcardAnswer,
-            flashcard.flashcard_created_time as flashcardCreatedTime,
-            flashcard.flashcard_updated_time as flashcardUpdatedTime
-        FROM
-            flashcard_set flashcard_set
-        LEFT JOIN flashcard_set_flashcard set_to_flashcard ON
-            set_to_flashcard.flashcard_set_id = flashcard_set.flashcard_set_id
-        LEFT JOIN flashcard flashcard ON
-            flashcard.flashcard_id = set_to_flashcard.flashcard_id
-        WHERE flashcard_set.flashcard_set_id = ?;
-    `,
-    createOne: `INSERT INTO ${dbName} (flashcard_set_id, flashcard_set_group_id, flashcard_set_name) VALUES (?, ?, ?)`,
-    updateOne: `UPDATE ${dbName} SET flashcard_set_name = ? WHERE flashcard_set_id = ?`,
-}
 
 interface SelectWithFlashcardsRow {
     id: string;
@@ -77,27 +31,54 @@ export default class FlashcardSetDataAccess {
         this.database = database;
     }
 
-    readAllByGroupIdWithFlashcards(groupId: string): Promise<FlashcardSetModel[]> {
-        return new Promise((resolve, reject) => {
-            this.database.all(sql.readByGroupIdWithFlashcards, groupId, (err, rows: SelectWithFlashcardsRow[]) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(this._mapFlashcardsToFlashcardSets(rows));
-            });
-        });
+    readAllByGroupIdWithFlashcards(groupId: string): FlashcardSetModel[] {
+        const rows = this.database.prepare(`
+            SELECT
+                flashcard_set.flashcard_set_id AS id,
+                flashcard_set.flashcard_set_group_id AS groupId,
+                flashcard_set.flashcard_set_name AS name,
+                flashcard_set.flashcard_set_created_time as createdTime,
+                flashcard_set.flashcard_set_updated_time as updatedTime,
+                set_to_flashcard.flashcard_id AS flashcardId,
+                flashcard.flashcard_prompt AS flashcardPrompt,
+                flashcard.flashcard_answer AS flashcardAnswer,
+                flashcard.flashcard_created_time as flashcardCreatedTime,
+                flashcard.flashcard_updated_time as flashcardUpdatedTime
+            FROM
+                flashcard_set flashcard_set
+            LEFT JOIN flashcard_set_flashcard set_to_flashcard ON
+                set_to_flashcard.flashcard_set_id = flashcard_set.flashcard_set_id
+            LEFT JOIN flashcard flashcard ON
+                flashcard.flashcard_id = set_to_flashcard.flashcard_id
+            WHERE flashcard_set.flashcard_set_group_id = ?;
+        `).all(groupId) as SelectWithFlashcardsRow[];
+
+        return this._mapFlashcardsToFlashcardSets(rows);
     }
-    
-    readWithFlashcards(id: string): Promise<FlashcardSetModel> {
-        return new Promise((resolve, reject) => {
-            this.database.all(sql.readByIdWithFlashcards, id, (error: Error, rows: SelectWithFlashcardsRow[]) => {
-                if (error) {
-                    reject(error);
-                }
-                const flashcardSet = this._mapFlashcardsToFlashcardSets(rows)[0];
-                resolve(flashcardSet)
-            });
-        });
+
+    readWithFlashcards(id: string): FlashcardSetModel | undefined {
+        const rows = this.database.prepare(`
+            SELECT
+                flashcard_set.flashcard_set_id AS id,
+                flashcard_set.flashcard_set_group_id AS groupId,
+                flashcard_set.flashcard_set_name AS name,
+                flashcard_set.flashcard_set_created_time as createdTime,
+                flashcard_set.flashcard_set_updated_time as updatedTime,
+                set_to_flashcard.flashcard_id AS flashcardId,
+                flashcard.flashcard_prompt AS flashcardPrompt,
+                flashcard.flashcard_answer AS flashcardAnswer,
+                flashcard.flashcard_created_time as flashcardCreatedTime,
+                flashcard.flashcard_updated_time as flashcardUpdatedTime
+            FROM
+                flashcard_set flashcard_set
+            LEFT JOIN flashcard_set_flashcard set_to_flashcard ON
+                set_to_flashcard.flashcard_set_id = flashcard_set.flashcard_set_id
+            LEFT JOIN flashcard flashcard ON
+                flashcard.flashcard_id = set_to_flashcard.flashcard_id
+            WHERE flashcard_set.flashcard_set_id = ?;
+        `).all(id) as SelectWithFlashcardsRow[];
+
+        return rows.length > 0 ? this._mapFlashcardsToFlashcardSets(rows)[0] : undefined;
     }
 
     _mapFlashcardsToFlashcardSets(rows: SelectWithFlashcardsRow[]): FlashcardSetModel[] {
@@ -126,27 +107,16 @@ export default class FlashcardSetDataAccess {
         return Object.values(flashcardSetMap);
     }
 
-    create(flashcardSet: FlashcardSetModel) {
-        return new Promise((resolve, reject) => {
-            flashcardSet.id = databaseUtil.newUuid();
-            this.database.run(sql.createOne, flashcardSet.id, flashcardSet.groupId, flashcardSet.name, (error: Error) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(flashcardSet);
-            })
-        })
+    create(flashcardSet: FlashcardSetModel): FlashcardSetModel {
+        flashcardSet.id = databaseUtil.newUuid();
+        this.database.prepare(`INSERT INTO ${tableName} (flashcard_set_id, flashcard_set_group_id, flashcard_set_name)VALUES (@id, @groupId, @name)`)
+            .run(flashcardSet);
+        return flashcardSet;
     }
 
     update(flashcardSet: FlashcardSetModel) {
-        return new Promise((resolve, reject) => {
-            this.database.run(sql.updateOne, flashcardSet.name, flashcardSet.id, (error: Error) => {
-                if (error) {
-                    console.error(error);
-                    reject(error);
-                }
-                resolve(flashcardSet);
-            });
-        })
+        this.database.prepare(`UPDATE ${tableName} SET flashcard_set_name = @name WHERE flashcard_set_id = @id`)
+            .run(flashcardSet);
+        return flashcardSet;
     }
 }

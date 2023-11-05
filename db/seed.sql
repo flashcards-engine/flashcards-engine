@@ -1,4 +1,4 @@
-PRAGMA foreign_keys=OFF;
+PRAGMA foreign_keys=ON;
 BEGIN TRANSACTION;
 CREATE TABLE flashcard_set_group (
     flashcard_set_group_id TEXT PRIMARY KEY,

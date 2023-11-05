@@ -32,6 +32,26 @@ interface AppendSetActionPayload {
     value: FlashcardSetModel;
 }
 
+interface AppendFlashcardActionPayload {
+    groupId: string;
+    setId: string;
+    value: FlashcardModel;
+}
+
+interface DeleteGroupActionPayload {
+    value: FlashcardSetGroupModel;
+}
+
+interface DeleteSetActionPayload {
+    value: FlashcardSetModel;
+}
+
+interface DeleteFlashcardActionPayload {
+    groupId: string;
+    setId: string;
+    value: string;
+}
+
 // State
 interface SetGroupState {
     value: FlashcardSetGroupModel | undefined;
@@ -101,6 +121,41 @@ export const flashcardSetGroupSlice = createSlice({
                 ownerGroup.flashcardSets.push(action.payload.value);
             }
         },
+        appendFlashcard: (state: SetGroupState, action: PayloadAction<AppendFlashcardActionPayload>) => {
+            const ownerGroup = groupUtil.findGroup(state.value, action.payload.groupId);
+            if (ownerGroup) {
+                const setIndex = ownerGroup.flashcardSets.findIndex((fs) => fs.id === action.payload.setId);
+                ownerGroup.flashcardSets[setIndex].flashcards = [...ownerGroup.flashcardSets[setIndex].flashcards, action.payload.value];
+            }
+        },
+        deleteGroup: (state: SetGroupState, action: PayloadAction<DeleteGroupActionPayload>) => {
+            const parentGroup = groupUtil.findGroup(state.value, action.payload.value.parentId);
+            if (parentGroup) {
+                const newChildGroups = [...parentGroup.childGroups];
+                const childGroupIndex = newChildGroups.findIndex((cg) => cg.id === action.payload.value.id);
+                newChildGroups.splice(childGroupIndex, 1);
+                parentGroup.childGroups = newChildGroups;
+            }
+        },
+        deleteSet: (state: SetGroupState, action: PayloadAction<DeleteSetActionPayload>) => {
+            const ownerGroup = groupUtil.findGroup(state.value, action.payload.value.groupId);
+            if (ownerGroup) {
+                const newSets = [...ownerGroup.flashcardSets];
+                const setIndex = newSets.findIndex((fs) => fs.id === action.payload.value.id);
+                newSets.splice(setIndex, 1);
+                ownerGroup.flashcardSets = newSets;
+            }
+        },
+        deleteFlashcard: (state: SetGroupState, action: PayloadAction<DeleteFlashcardActionPayload>) => {
+            const ownerGroup = groupUtil.findGroup(state.value, action.payload.groupId);
+            if (ownerGroup) {
+                const setIndex = ownerGroup.flashcardSets.findIndex((fs) => fs.id === action.payload.setId);
+                const newFlashcards = [...ownerGroup.flashcardSets[setIndex].flashcards];
+                const flashcardIndex = newFlashcards.findIndex((f) => f.id === action.payload.value);
+                newFlashcards.splice(flashcardIndex, 1);
+                ownerGroup.flashcardSets[setIndex].flashcards = newFlashcards;
+            }
+        },
     }
 });
 
@@ -112,6 +167,10 @@ export const {
     updateFlashcard,
     appendChildGroup,
     appendSet,
+    appendFlashcard,
+    deleteGroup,
+    deleteSet,
+    deleteFlashcard,
 } = flashcardSetGroupSlice.actions;
 
 // Selectors

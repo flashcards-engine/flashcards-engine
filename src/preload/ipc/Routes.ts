@@ -33,6 +33,10 @@ const routes: RouteMapping[] = [
         method: 'PUT',
         route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards/{flashcardId}',
     },
+    {
+        method: 'DELETE',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards/{flashcardId}',
+    },
 ];
 
 export default routes;

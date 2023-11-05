@@ -35,30 +35,37 @@ export default class FlashcardSetGroupController extends Controller {
                 method: 'GET',
                 route: '/flashcard-set-groups',
                 handler: (event: IpcMainInvokeEvent, params: GetAllParams) => {
-                    if (params.hasOwnProperty('parentId')) {
-                        return this.flashcardSetGroupService.getByParentId(params.parentId);
-                    }
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flashcardSetGroupService.getByParentId(params.parentId));
+                    });
+
                 }
             },
             {
                 method: 'POST',
                 route: '/flashcard-set-groups',
                 handler: (event: IpcMainInvokeEvent, params: PostSingleParams) => {
-                    return this.flashcardSetGroupService.create(params.body);
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flashcardSetGroupService.create(params.body));
+                    });
                 }
             },
             {
                 method: 'GET',
                 route: '/flashcard-set-groups/{id}',
                 handler: (event: IpcMainInvokeEvent, params: GetSingleParams) => {
-                    return this.flashcardSetGroupService.getWithChildEntities(params.id);
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flashcardSetGroupService.getWithChildEntities(params.id));
+                    });
                 }
             },
             {
                 method: 'PUT',
                 route: '/flashcard-set-groups/{id}',
                 handler: (event: IpcMainInvokeEvent, params: PutSingleParams) => {
-                    return this.flashcardSetGroupService.update(params.body);
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flashcardSetGroupService.update(params.body));
+                    });
                 }
             },
         ];

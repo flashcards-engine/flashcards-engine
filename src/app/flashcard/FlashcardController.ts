@@ -18,6 +18,12 @@ interface PutSingleParams {
     body: FlashcardModel;
 }
 
+interface DeleteSingleParams {
+    groupId: string;
+    setId: string;
+    flashcardId: string;
+}
+
 export default class FlashcardController extends Controller {
     flashcardService: FlashcardService;
     flashcardSetService: FlashcardSetService;
@@ -34,19 +40,13 @@ export default class FlashcardController extends Controller {
                 method: 'POST',
                 route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards',
                 handler: (event: IpcMainInvokeEvent, params: PostSingleParams) => {
-//                    return new Promise((resolve, reject) => {
-//                        this.flashcardSetService.getWithFlashcards(params.setId).then((flashcardSet) => {
-//                            if (flashcardSet.groupId !== params.groupId) {
-//                                reject('Specified flashcard set not found under ownership of specified flashcard set group');
-//                            }
-//                            this.flashcardService.create(params.setId, params.body).then((flashcard: FlashcardModel, error: Error) => {
-//                                if (error) {
-//                                    reject(error);
-//                                }
-//                                resolve(flashcard);
-//                            });
-//                        });
-//                    });
+                    return new Promise((resolve, reject) => {
+                        const flashcardSet = this.flashcardSetService.getWithFlashcards(params.setId)
+                        if (flashcardSet.groupId !== params.groupId) {
+                            reject('Specified flashcard set not found under ownership of specified flashcard set group');
+                        }
+                        resolve(this.flashcardService.create(params.setId, params.body));
+                    });
                 }
             },
             {
@@ -54,16 +54,33 @@ export default class FlashcardController extends Controller {
                 route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards/{flashcardId}',
                 handler: (event: IpcMainInvokeEvent, params: PutSingleParams) => {
                     return new Promise((resolve, reject) => {
-                        this.flashcardSetService.getWithFlashcards(params.setId).then((flashcardSet) => {
-                            if (flashcardSet.groupId !== params.groupId) {
-                                reject('Specified flashcard set not found under ownership of specified flashcard set group');
-                            }
-                            const oldFlashcard = flashcardSet.flashcards.find((f) => f.id === params.flashcardId);
-                            if (!oldFlashcard) {
-                                reject('Specified flashcard not found under ownership of specified flashcard set');
-                            }
-                            resolve(this.flashcardService.update(params.body));
-                        });
+                        const flashcardSet = this.flashcardSetService.getWithFlashcards(params.setId)
+                        if (flashcardSet.groupId !== params.groupId) {
+                            reject('Specified flashcard set not found under ownership of specified flashcard set group');
+                        }
+                        const oldFlashcard = flashcardSet.flashcards.find((f) => f.id === params.flashcardId);
+                        if (!oldFlashcard) {
+                            reject('Specified flashcard not found under ownership of specified flashcard set');
+                        }
+                        resolve(this.flashcardService.update(params.body));
+                    });
+                }
+            },
+            {
+                method: 'DELETE',
+                route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards/{flashcardId}',
+                handler: (event: IpcMainInvokeEvent, params: DeleteSingleParams) => {
+                    return new Promise((resolve, reject) => {
+                        const flashcardSet = this.flashcardSetService.getWithFlashcards(params.setId)
+                        if (flashcardSet.groupId !== params.groupId) {
+                            reject('Specified flashcard set not found under ownership of specified flashcard set group');
+                        }
+                        const oldFlashcard = flashcardSet.flashcards.find((f) => f.id === params.flashcardId);
+                        if (!oldFlashcard) {
+                            reject('Specified flashcard not found under ownership of specified flashcard set');
+                        }
+                        this.flashcardService.delete(params.flashcardId);
+                        resolve(undefined);
                     });
                 }
             },

@@ -14,23 +14,16 @@ export default class FlashcardSetService {
         this.flashcardDataAccess = flashcardDataAccess;
     }
 
-    getWithFlashcards(flashcardSetId: string) {
+    getWithFlashcards(flashcardSetId: string): FlashcardSetModel {
         return this.flashcardSetDataAccess.readWithFlashcards(flashcardSetId);
     }
 
-    create(flashcardSetGroupId: string, flashcardSet: FlashcardSetModel) {
+    create(flashcardSetGroupId: string, flashcardSet: FlashcardSetModel): FlashcardSetModel {
         flashcardSet.groupId = flashcardSetGroupId;
         return this.flashcardSetDataAccess.create(flashcardSet);
     }
 
-    update(flashcardSet: FlashcardSetModel) {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.flashcardSetDataAccess.update(flashcardSet),
-                //flashcardSet.flashcards.map((flashcard) => this.flashcardDataAccess.update(flashcard))
-            ]).then((values) => {
-                resolve(values[0]);
-            })
-        });
+    update(flashcardSet: FlashcardSetModel): FlashcardSetModel {
+        return this.flashcardSetDataAccess.update(flashcardSet);
     }
 }

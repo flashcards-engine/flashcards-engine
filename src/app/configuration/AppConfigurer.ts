@@ -1,4 +1,4 @@
-import { Database } from 'sqlite3';
+import { Database } from 'better-sqlite3';
 import FlashcardSetGroupDataAccess from "../flashcard_set_group/FlashcardSetGroupDataAccess.js";
 import FlashcardSetDataAccess from '../flashcard_set/FlashcardSetDataAccess.js';
 import FlashcardDataAccess from '../flashcard/FlashcardDataAccess.js';

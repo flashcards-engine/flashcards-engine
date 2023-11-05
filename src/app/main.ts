@@ -1,14 +1,14 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import sqlite3 from 'sqlite3';
 import handlerConfigurer from "./ipc/HandlerConfigurer.js";
 import appConfigurer from './configuration/AppConfigurer.js';
+import databaseConfiguration from "./configuration/DatabaseConfiguration.js";
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const configureBackend = async () => {
-    const database = new (sqlite3.verbose()).Database('flashcards.db');
+    const database = databaseConfiguration.getConnection(databaseConfiguration.getFilename());
     const objects = appConfigurer.configure(database).getObjects();
     handlerConfigurer.configure(ipcMain, objects);
     await objects.initializer.initialize();

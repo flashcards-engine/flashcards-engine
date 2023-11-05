@@ -28,14 +28,18 @@ export default class FlashcardSetController extends Controller {
                 method: 'POST',
                 route: '/flashcard-set-groups/{groupId}/flashcard-sets',
                 handler: (event: IpcMainInvokeEvent, params: PostSingleParams) => {
-                    return this.flaschardSetService.create(params.groupId, params.body);
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flaschardSetService.create(params.groupId, params.body))
+                    });
                 },
             },
             {
                 method: 'PUT',
                 route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}',
                 handler: (event: IpcMainInvokeEvent, params: PutSingleParams) => {
-                    return this.flaschardSetService.update(params.body);
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flaschardSetService.update(params.body));
+                    });
                 },
             }
         ];

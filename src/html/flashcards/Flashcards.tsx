@@ -7,11 +7,14 @@ import EntityType from "../../common/types/EntityType";
 import FlashcardSetGroupModel from "../../common/types/FlashcardSetGroupModel";
 import FlashcardSetModel from "../../common/types/FlashcardSetModel";
 import FlashcardSetGroup from './flashcard_library/FlashcardSetGroup';
+import ControlBar from "./control_bar/ControlBar";
 
 export default function Flashcards() {
     const dispatch = useAppDispatch();
     const rootFlashcardSetGroup = useAppSelector(selectTree);
     const activeEntity = useAppSelector(selectActiveEntity);
+
+    let flashcardSetSource: string | undefined = undefined;
 
     const setActiveEntityHandler = (
         value: FlashcardSetGroupModel | FlashcardSetModel,
@@ -34,13 +37,13 @@ export default function Flashcards() {
                     {
                         rootFlashcardSetGroup
                             ? <FlashcardSetGroup
-                                flashcardSetGroup={rootFlashcardSetGroup}
-                                isInitiallyOpen={true}
-                                onSelectHandler={setActiveEntityHandler}
-                                selectableTypes={['FLASHCARD_SET_GROUP', 'FLASHCARD_SET']}
-                                activeEntityId={activeEntity?.value?.id}
-                                highlightSelected={true}
-                            />
+                            flashcardSetGroup={rootFlashcardSetGroup}
+                            isInitiallyOpen={true}
+                            onSelectHandler={setActiveEntityHandler}
+                            selectableTypes={['FLASHCARD_SET_GROUP', 'FLASHCARD_SET']}
+                            activeEntityId={activeEntity?.value?.id}
+                            highlightSelected={true}
+                />
                             : null
                     }
                 </div>
@@ -50,24 +53,21 @@ export default function Flashcards() {
                         activeEntityType={activeEntity?.type}
                     />
                 </div>
-                {/*<div className="flex-basis-30 overflow-scroll striped border-left">*/}
-                {/*    */}{/*{/* When moving a flashcard, here is where to place the second FlashcardLibrary */}
-                {/*    {*/}
-                {/*        rootFlashcardSetGroup*/}
-                {/*            ? <FlashcardSetGroup*/}
-                {/*                flashcardSetGroup={rootFlashcardSetGroup}*/}
-                {/*                isInitiallyOpen={true}*/}
-                {/*                onSelectHandler={setDestinationFlashcardSetHandler}*/}
-                {/*                selectableTypes={['FLASHCARD_SET']}*/}
-                {/*                highlightSelected={false}*/}
-                {/*            />*/}
-                {/*            : null*/}
-                {/*    }*/}
-                {/*</div>*/}
+                {
+                    rootFlashcardSetGroup && flashcardSetSource
+                        ? <div className="flex-basis-30 overflow-scroll striped border-left">
+                        <FlashcardSetGroup
+                            flashcardSetGroup={rootFlashcardSetGroup}
+                            isInitiallyOpen={true}
+                            onSelectHandler={setDestinationFlashcardSetHandler}
+                            selectableTypes={['FLASHCARD_SET']}
+                            highlightSelected={false}
+                        />
+            </div>
+                        : null
+                }
             </main>
-            <nav className="control-bar border-top">
-                {activeEntity?.type}: {activeEntity?.value?.name}
-            </nav>
+            <ControlBar activeEntity={activeEntity && activeEntity.type === 'FLASHCARD_SET' ? activeEntity as FlashcardSetModel : undefined} />
         </div>
     )
 }

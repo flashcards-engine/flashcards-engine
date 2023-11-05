@@ -10,7 +10,15 @@ export default class FlashcardService {
         this.flashcardDataAccess = flashcardDataAccess;
     }
 
-    update(flashcard: FlashcardModel) {
+    create(flashcardSetId: string, flashcardModel: FlashcardModel): FlashcardModel {
+        return this.flashcardDataAccess.create(flashcardSetId, flashcardModel);
+    }
+
+    update(flashcard: FlashcardModel): FlashcardModel {
         return this.flashcardDataAccess.update(flashcard);
+    }
+
+    delete(flashcardId: string) {
+        this.flashcardDataAccess.delete(flashcardId);
     }
 }

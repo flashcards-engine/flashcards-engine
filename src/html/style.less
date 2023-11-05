@@ -1,4 +1,5 @@
 @lightgray: #eeeeee;
+@darkgray: #aaaaaa;
 
 html {
     font-family: sans-serif;
@@ -157,12 +158,32 @@ textarea {
 
 .control-bar {
     min-height: 52px;
+    font-size: 34px;
 }
 
 .align-items-start {
     align-items: start;
 }
 
+.align-items-center {
+    align-items: center;
+}
+
 .max-width-500px {
     max-width: 500px;
+}
+
+.position-relative {
+    position: relative;
+}
+
+#editor-status-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: @darkgray;
+}
+
+.faded {
+    color: @lightgray;
 }
