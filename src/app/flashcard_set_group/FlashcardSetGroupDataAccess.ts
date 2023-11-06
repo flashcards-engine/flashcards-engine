@@ -39,7 +39,7 @@ export default class FlashcardSetGroupDataAccess {
 
     create(flashcardSetGroup: FlashcardSetGroupModel): FlashcardSetGroupModel {
         flashcardSetGroup.id = databaseUtil.newUuid();
-        this.database.prepare(`INSERT INTO ${tableName} (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name)VALUES (@id, @parentId, @name)`)
+        this.database.prepare(`INSERT INTO ${tableName} (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES (@id, @parentId, @name)`)
             .run(flashcardSetGroup);
         return flashcardSetGroup;
     }

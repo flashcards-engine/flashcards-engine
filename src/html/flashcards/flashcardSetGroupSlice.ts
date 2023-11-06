@@ -199,7 +199,6 @@ export const flashcardSetGroupSlice = createSlice({
                 entity: action.payload.entity,
                 hierarchy: groupUtil.buildHierarchyFromGroup(state.value, groupId),
             }
-            console.debug(state.activeEntity.hierarchy);
         }
     }
 });

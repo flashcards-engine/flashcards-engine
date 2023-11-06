@@ -44,7 +44,6 @@ export default function ControlBar({
     const previousCard = (event: MouseEvent) => {
         event.stopPropagation();
         if (hasPrevious) {
-            console.debug('trigger previous')
             navigate(-1);
         }
     }
@@ -52,7 +51,6 @@ export default function ControlBar({
     const nextCard = (event: MouseEvent) => {
         event.stopPropagation();
         if (hasNext) {
-            console.debug('trigger next')
             navigate(1);
         }
     }
@@ -64,6 +62,7 @@ export default function ControlBar({
                     id="previous"
                     className={'flex-container align-items-center justify-content-center control-icon ' + (!lockInfo.isLocked && isSessionActive && hasPrevious ? 'cursor-pointer' : 'faded')}
                     onClick={previousCard}
+                    title="Previous flashcard"
                 >
                     <FontAwesomeIcon icon={faLeftLong} />
                 </div>
@@ -75,6 +74,7 @@ export default function ControlBar({
                             id="flip"
                             className='flex-container align-items-center justify-content-center control-icon cursor-pointer'
                             onClick={flipCard}
+                            title="Flip flashcard"
                         >
                             <FontAwesomeIcon icon={faRotate} />
                         </div>
@@ -82,6 +82,7 @@ export default function ControlBar({
                             id="play"
                             className={'flex-container align-items-center justify-content-center control-icon ' + (!lockInfo.isLocked && isSessionTriggerable ? 'cursor-pointer' : 'faded')}
                             onClick={startFlashcardSession}
+                            title="Start flashcard session"
                         >
                             <FontAwesomeIcon icon={faPlay} />
                         </div>
@@ -92,6 +93,7 @@ export default function ControlBar({
                     id="next"
                     className={'flex-container align-items-center justify-content-center control-icon ' + (!lockInfo.isLocked && isSessionActive && hasNext ? 'cursor-pointer' : 'faded')}
                     onClick={nextCard}
+                    title="Next flashcard"
                 >
                     <FontAwesomeIcon icon={faRightLong} />
                 </div>

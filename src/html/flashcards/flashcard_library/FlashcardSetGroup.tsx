@@ -101,7 +101,11 @@ export default function FlashcardSetGroup({
                     className='flex-basis-max-content flex-grow-1'
                     onClick={selectFlashcardSetGroup}
                 >
-                    {flashcardSetGroup.name}
+                    {
+                        flashcardSetGroup.name
+                            ? flashcardSetGroup.name
+                            : <i className="text-gray">{'<untitled group>'}</i>
+                    }
                 </div>
             </div>
             {
@@ -168,7 +172,11 @@ function FlashcardSet({flashcardSet, indentation, selectableTypes, onSelectHandl
             <div className='flex-container justify-content-end cursor-pointer pr-5px'>
                 <Indentation indentation={indentation} />
             </div>
-            {flashcardSet.name}
+            {
+                flashcardSet.name
+                    ? flashcardSet.name
+                    : <i className="text-gray">{'<untitled flashcard set>'}</i>
+            }
         </div>
     )
 }

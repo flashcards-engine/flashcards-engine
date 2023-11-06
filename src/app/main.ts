@@ -16,13 +16,13 @@ const configureBackend = async () => {
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 1360,
-        height: 768,
+        width: 1200,
+        height: 800,
         webPreferences: {
             preload: path.join(__dirname,'../html', 'preload.bundle.js'),
         },
     });
-//    win.removeMenu();
+    win.removeMenu();
 
     // Uncomment to run with dev tools at the start
     // win.webContents.openDevTools();

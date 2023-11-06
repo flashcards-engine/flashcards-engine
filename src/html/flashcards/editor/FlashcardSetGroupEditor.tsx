@@ -53,7 +53,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
         window.api['POST']['/flashcard-set-groups']({
             body: {
                 parentId: baseFlashcardSetGroup.id,
-                name: 'New flashcard set group',
+                name: '',
             },
         }).then((newSubGroup) => {
             dispatch(appendChildGroup({value: newSubGroup}));
@@ -73,7 +73,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
         window.api['POST']['/flashcard-set-groups/{groupId}/flashcard-sets']({
             groupId: baseFlashcardSetGroup.id,
             body: {
-                name: 'New flashcard set',
+                name: '',
                 flashcards: [],
             },
         }).then((newSet) => {
@@ -108,8 +108,20 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
                 </form>
             </div>
             <div className="flex-container flex-gap-5px">
-                <button disabled={lockInfo.isLocked} onClick={addSubGroupHandler}>New sub group</button>
-                <button disabled={lockInfo.isLocked} onClick={addFlashcardSetHandler}>New flashcard set</button>
+                <button
+                    title="Create a new flashcard set group (like a directory/folder) with the currently selected group as its parent"
+                    onClick={addSubGroupHandler}
+                    disabled={lockInfo.isLocked}
+                >
+                    New flashcard set group
+                </button>
+                <button
+                    title="Create a new flashcard set with the currently selected group as its parent"
+                    onClick={addFlashcardSetHandler}
+                    disabled={lockInfo.isLocked}
+                >
+                    New flashcard set
+                </button>
             </div>
         </div>
     );

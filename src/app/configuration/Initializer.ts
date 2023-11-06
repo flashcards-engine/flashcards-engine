@@ -1,10 +1,10 @@
-import databaseUtil from "../util/DatabaseUtil.js";
 import FlashcardSetGroupModel from "../../common/types/FlashcardSetGroupModel.js";
 import FlashcardSetGroupDataAccess from "../flashcard_set_group/FlashcardSetGroupDataAccess.js";
 
 function createRootFlashcardSetGroup(): FlashcardSetGroupModel {
     return {
         name: 'Flashcards',
+        parentId: undefined,
     };
 }
 
@@ -19,11 +19,11 @@ export default class Initializer {
         console.info('Initializing application state...');
         
         // Create a root flashcard_set_group if it doesn't exist
-        let flashcardSetGroups: FlashcardSetGroupModel[] = await this.flashcardSetGroupDataAccess.readByParentId(null);
-        if (flashcardSetGroups && flashcardSetGroups[0] === null) {
+        let flashcardSetGroups: FlashcardSetGroupModel[] = this.flashcardSetGroupDataAccess.readByParentId(null);
+        if (flashcardSetGroups.length === 0) {
             const rootFlashcardSetGroup = createRootFlashcardSetGroup();
             console.info(`Root flashcard_set_group does not exist. Creating...`);
-            await this.flashcardSetGroupDataAccess.create(rootFlashcardSetGroup);
+            this.flashcardSetGroupDataAccess.create(rootFlashcardSetGroup);
             console.info(`Root flashcard_set_group with id '${rootFlashcardSetGroup.id}' created.`);
         }
         

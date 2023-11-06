@@ -5,3 +5,6 @@ out/*
 build/*
 flashcards.db
 dist
+*-shm
+*-wal
+*.db

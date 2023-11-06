@@ -7,9 +7,6 @@ CREATE TABLE flashcard_set_group (
     flashcard_set_group_created_time INTEGER DEFAULT (strftime('%s', 'now')),
     flashcard_set_group_updated_time INTEGER DEFAULT (strftime('%s', 'now'))
 );
-INSERT INTO flashcard_set_group (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES('339c81fb-2418-4f9d-b575-206de15d2a5c',NULL,'Flashcards');
-INSERT INTO flashcard_set_group (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES('75e734c4-76a7-11ee-8c3b-00a554dd65cb','339c81fb-2418-4f9d-b575-206de15d2a5c','Child 1');
-INSERT INTO flashcard_set_group (flashcard_set_group_id, flashcard_set_group_parent_id, flashcard_set_group_name) VALUES('dabce70a-76ab-11ee-8d90-00a554dd65cb','339c81fb-2418-4f9d-b575-206de15d2a5c','Child 2');
 CREATE TABLE flashcard_set (
     flashcard_set_id TEXT PRIMARY KEY,
     flashcard_set_group_id TEXT NOT NULL,
@@ -20,8 +17,6 @@ CREATE TABLE flashcard_set (
         REFERENCES flashcard_set_group (flashcard_set_group_id)
         ON DELETE RESTRICT
 );
-INSERT INTO flashcard_set (flashcard_set_id, flashcard_set_group_id, flashcard_set_name) VALUES('3252450a-76a7-11ee-8eb1-00a554dd65cb','339c81fb-2418-4f9d-b575-206de15d2a5c','Set 1');
-INSERT INTO flashcard_set (flashcard_set_id, flashcard_set_group_id, flashcard_set_name) VALUES('806d6e18-76ac-11ee-a231-00a554dd65cb','339c81fb-2418-4f9d-b575-206de15d2a5c','Set 2');
 CREATE TABLE flashcard (
     flashcard_id TEXT PRIMARY KEY,
     flashcard_prompt TEXT NOT NULL,
@@ -29,7 +24,6 @@ CREATE TABLE flashcard (
     flashcard_created_time INTEGER DEFAULT (strftime('%s', 'now')),
     flashcard_updated_time INTEGER DEFAULT (strftime('%s', 'now'))
 );
-INSERT INTO flashcard (flashcard_id, flashcard_prompt, flashcard_answer) VALUES('e3d3bbe0-76a9-11ee-9f20-00a554dd65cb','prompt','answer');
 CREATE TABLE flashcard_set_flashcard (
     flashcard_set_flashcard_id TEXT PRIMARY KEY,
     flashcard_set_id TEXT NOT NULL,
@@ -41,7 +35,6 @@ CREATE TABLE flashcard_set_flashcard (
         REFERENCES flashcard (flashcard_id)
         ON DELETE CASCADE
 );
-INSERT INTO flashcard_set_flashcard VALUES('13d21c56-76aa-11ee-993d-00a554dd65cb','3252450a-76a7-11ee-8eb1-00a554dd65cb','e3d3bbe0-76a9-11ee-9f20-00a554dd65cb');
 COMMIT;
 
 CREATE TRIGGER [update_flashcard_set_group_timestamp]
