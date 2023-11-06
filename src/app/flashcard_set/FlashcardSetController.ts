@@ -15,6 +15,11 @@ interface PutSingleParams {
     body: FlashcardSetModel;
 }
 
+interface PostNewSession {
+    groupId: string;
+    setId: string;
+}
+
 export default class FlashcardSetController extends Controller {
     flaschardSetService: FlashcardSetService;
 
@@ -29,6 +34,15 @@ export default class FlashcardSetController extends Controller {
                 route: '/flashcard-set-groups/{groupId}/flashcard-sets',
                 handler: (event: IpcMainInvokeEvent, params: PostSingleParams) => {
                     return new Promise((resolve, reject) => {
+                        const flashcardSet = params.body;
+                        if (!flashcardSet.flashcards) {
+                            flashcardSet.flashcards = [];
+                        } else if (flashcardSet.flashcards.length > 0) {
+                            reject('' +
+                                'Cannot create flashcards with flashcard set. Must create flashcard set first,' +
+                                'then create flashcards individually using the appropriate endpoint.'
+                            );
+                        }
                         resolve(this.flaschardSetService.create(params.groupId, params.body))
                     });
                 },
@@ -41,7 +55,16 @@ export default class FlashcardSetController extends Controller {
                         resolve(this.flaschardSetService.update(params.body));
                     });
                 },
-            }
+            },
+            {
+                method: 'POST',
+                route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/session',
+                handler: (event: IpcMainInvokeEvent, params: PostNewSession) => {
+                    return new Promise((resolve, reject) => {
+                        resolve(this.flaschardSetService.createSession(params.setId));
+                    });
+                },
+            },
         ];
     }
 }

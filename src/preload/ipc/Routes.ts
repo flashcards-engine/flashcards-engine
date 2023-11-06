@@ -27,6 +27,10 @@ const routes: RouteMapping[] = [
     },
     {
         method: 'POST',
+        route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/session',
+    },
+    {
+        method: 'POST',
         route: '/flashcard-set-groups/{groupId}/flashcard-sets/{setId}/flashcards',
     },
     {

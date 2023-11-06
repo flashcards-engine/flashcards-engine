@@ -9,7 +9,7 @@ import {
 } from "../lockInfoSlice";
 import {updateSet, updateFlashcard, deleteFlashcard, appendFlashcard} from "../flashcardSetGroupSlice";
 import FlashcardModel from '../../../common/types/FlashcardModel';
-import {selectActiveEntity, setActiveEntity} from "../activeEntitySlice";
+import {setActiveEntity} from "../flashcardSetGroupSlice";
 
 interface FlashcardSetEditorProps {
     flashcardSet: FlashcardSetModel;
@@ -72,7 +72,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                 };
                 newBaseFlashcardSet.name = updatedFlashcardSet.name;
                 setBaseFlashcardSet(newBaseFlashcardSet);
-                dispatch(setActiveEntity({type: 'FLASHCARD_SET', value: newBaseFlashcardSet}));
+                dispatch(setActiveEntity({type: 'FLASHCARD_SET', entity: newBaseFlashcardSet}));
             }).finally(() => {
                 dispatch(setLockInfo({isLocked: false}));
             });
@@ -107,7 +107,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                     const flashcardIndex = newBaseFlashcardSet.flashcards.findIndex((flashcard) => flashcard.id === updatedFlashcard.id);
                     newBaseFlashcardSet.flashcards[flashcardIndex] = updatedFlashcard;
                     setBaseFlashcardSet(newBaseFlashcardSet);
-                    dispatch(setActiveEntity({type: 'FLASHCARD_SET', value: newBaseFlashcardSet}));
+                    dispatch(setActiveEntity({type: 'FLASHCARD_SET', entity: newBaseFlashcardSet}));
                 }).finally(() => {
                     dispatch(setLockInfo({isLocked: false}));
                 });
@@ -170,7 +170,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
             };
             setBaseFlashcardSet(newBaseFlashcardSet);
             setWorkingFlashcardSet(newWorkingFlashcardSet);
-            dispatch(setActiveEntity({type: 'FLASHCARD_SET', value: newBaseFlashcardSet}));
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET', entity: newBaseFlashcardSet}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         })
@@ -205,7 +205,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
             newWorkingFlashcardSet.flashcards.splice(workingFlashcardIndex, 1);
             setBaseFlashcardSet(newBaseFlashcardSet);
             setWorkingFlashcardSet(newWorkingFlashcardSet);
-            dispatch(setActiveEntity({type: 'FLASHCARD_SET', value: newBaseFlashcardSet}));
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET', entity: newBaseFlashcardSet}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         });
@@ -232,7 +232,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                     </label>
                     {
                         workingFlashcardSet.flashcards.map((flashcard) =>
-                            <>
+                            <div key={flashcard.id} className="flex-container flex-column">
                                 <hr />
                                 <label htmlFor={promptId(flashcard)}>Prompt:</label>
                                 <textarea
@@ -263,7 +263,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                                     <button disabled={lockInfo.isLocked} data-flashcard-id={flashcard.id}>Copy</button>
                                     <button disabled={lockInfo.isLocked} data-flashcard-id={flashcard.id} onClick={deleteFlashcardHandler}>Delete</button>
                                 </div>
-                            </>
+                            </div>
                         )
                     }
                 </form>

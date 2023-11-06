@@ -16,8 +16,8 @@ const configureBackend = async () => {
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 1200,
-        height: 800,
+        width: 1360,
+        height: 768,
         webPreferences: {
             preload: path.join(__dirname,'../html', 'preload.bundle.js'),
         },

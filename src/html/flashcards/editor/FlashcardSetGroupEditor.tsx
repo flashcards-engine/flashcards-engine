@@ -4,7 +4,7 @@ import FlashcardSetGroupModel from "../../../common/types/FlashcardSetGroupModel
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import {selectLockInfo, selectLockTimeout, setLockInfo} from "../lockInfoSlice";
 import {appendChildGroup, appendSet, updateGroup} from '../flashcardSetGroupSlice';
-import {setActiveEntity} from "../activeEntitySlice";
+import {setActiveEntity} from "../flashcardSetGroupSlice";
 
 interface FlashcardSetGroupEditorProps {
     flashcardSetGroup: FlashcardSetGroupModel;
@@ -30,7 +30,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
             }).then((updatedFlashcardSetGroup: FlashcardSetGroupModel) => {
                 dispatch(updateGroup({value: updatedFlashcardSetGroup}));
                 setBaseFlashcardSetGroup(updatedFlashcardSetGroup);
-                dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: updatedFlashcardSetGroup}));
+                dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', entity: updatedFlashcardSetGroup}));
             }).finally(() => {
                 dispatch(setLockInfo({isLocked: false}));
             });
@@ -62,7 +62,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
                 childGroups: [...baseFlashcardSetGroup.childGroups, newSubGroup],
             }
             setBaseFlashcardSetGroup(newBaseFlashcardSetGroup);
-            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: newBaseFlashcardSetGroup}));
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', entity: newBaseFlashcardSetGroup}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         });
@@ -74,6 +74,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
             groupId: baseFlashcardSetGroup.id,
             body: {
                 name: 'New flashcard set',
+                flashcards: [],
             },
         }).then((newSet) => {
             dispatch(appendSet({value: newSet}));
@@ -82,7 +83,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
                 flashcardSets: [...baseFlashcardSetGroup.flashcardSets, newSet],
             }
             setBaseFlashcardSetGroup(newBaseFlashcardSetGroup);
-            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', value: newBaseFlashcardSetGroup}));
+            dispatch(setActiveEntity({type: 'FLASHCARD_SET_GROUP', entity: newBaseFlashcardSetGroup}));
         }).finally(() => {
             dispatch(setLockInfo({isLocked: false}));
         });

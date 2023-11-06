@@ -6,7 +6,7 @@ import EntityType from "../../../common/types/EntityType";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown, faCaretRight} from "@fortawesome/free-solid-svg-icons";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import { replaceGroup } from '../flashcardSetGroupSlice';
+import {replaceGroup, setActiveEntity} from '../flashcardSetGroupSlice';
 import {selectLockInfo} from "../lockInfoSlice";
 
 type OnSelectHandler = (value: FlashcardSetGroupModel | FlashcardSetModel, type: EntityType) => void;
@@ -17,17 +17,18 @@ interface Props {
     indentation?: number;
     onSelectHandler: OnSelectHandler;
     selectableTypes: EntityType[];
-    activeEntityId?: string;
+    activeEntityId?: string | undefined;
+    activeEntityHierarchy?: string[] | undefined;
     highlightSelected: boolean;
 }
 
 export default function FlashcardSetGroup({
     flashcardSetGroup,
-    isInitiallyOpen,
     indentation = 0,
     onSelectHandler,
     selectableTypes,
     activeEntityId,
+    activeEntityHierarchy,
     highlightSelected
 }: Props) {
     const dispatch = useAppDispatch();
@@ -60,9 +61,17 @@ export default function FlashcardSetGroup({
                 setOpenLock(false);
             });
         } else {
+            // If activeEntity is selected and is a child of this group, must de-select it
+            if (activeEntityHierarchy && activeEntityHierarchy.includes(flashcardSetGroup.id)) {
+                dispatch(setActiveEntity({entity: undefined, type: undefined,}));
+            }
             setIsOpen(false);
             setOpenLock(false);
         }
+    }
+
+    if (!isOpen && activeEntityHierarchy && activeEntityHierarchy.includes(flashcardSetGroup.id)) {
+        toggleOpen();
     }
 
     return (
@@ -104,6 +113,7 @@ export default function FlashcardSetGroup({
                             onSelectHandler={onSelectHandler}
                             selectableTypes={selectableTypes}
                             activeEntityId={activeEntityId}
+                            activeEntityHierarchy={activeEntityHierarchy}
                             highlightSelected={highlightSelected}
                         />
                     ))

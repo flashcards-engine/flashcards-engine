@@ -16,7 +16,7 @@ interface SetNavigationLockActionPayload {
 
 const initialState: NavigationLockState = {
     isLocked: false,
-    timeout: 250,
+    timeout: 200,
     activeId: undefined,
     activeField: undefined,
 }

@@ -36,7 +36,26 @@ const findParentGroup = (
     }
 };
 
+const buildHierarchyFromGroup = (
+    group: FlashcardSetGroupModel,
+    groupId: string
+): string[] => {
+    if (group.id === groupId) {
+        return [group.id];
+    }
+    if (!group.childGroups) {
+        return;
+    }
+    for (let childGroup of group.childGroups) {
+        const hierarchyOrUndefined = buildHierarchyFromGroup(childGroup, groupId);
+        if (hierarchyOrUndefined) {
+            return [group.id].concat(hierarchyOrUndefined);
+        }
+    }
+}
+
 export default {
     findGroup,
     findParentGroup,
+    buildHierarchyFromGroup,
 }

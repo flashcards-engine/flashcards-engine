@@ -4,6 +4,7 @@ import groupUtil from '../../common/util/GroupUtil';
 import {RootState} from "../store/store";
 import FlashcardSetModel from '../../common/types/FlashcardSetModel';
 import FlashcardModel from '../../common/types/FlashcardModel';
+import EntityType from '../../common/types/EntityType';
 
 // Action payloads
 interface ReplaceGroupActionPayload {
@@ -52,13 +53,30 @@ interface DeleteFlashcardActionPayload {
     value: string;
 }
 
+interface SetActiveEntityActionPayload {
+    entity: FlashcardSetGroupModel | FlashcardSetModel;
+    type: EntityType | undefined;
+}
+
 // State
+interface ActiveEntityState {
+    entity: FlashcardSetGroupModel | FlashcardSetModel | undefined;
+    type: EntityType | undefined;
+    hierarchy: string[] | undefined;
+}
+
 interface SetGroupState {
     value: FlashcardSetGroupModel | undefined;
+    activeEntity: ActiveEntityState;
 }
 
 const initialState: SetGroupState = {
     value: undefined,
+    activeEntity: {
+        entity: undefined,
+        type: undefined,
+        hierarchy: undefined,
+    }
 }
 
 export const flashcardSetGroupSlice = createSlice({
@@ -156,6 +174,33 @@ export const flashcardSetGroupSlice = createSlice({
                 ownerGroup.flashcardSets[setIndex].flashcards = newFlashcards;
             }
         },
+        setActiveEntity: (state: SetGroupState, action: PayloadAction<SetActiveEntityActionPayload>) => {
+            if (!action.payload.type || !action.payload.entity) {
+                state.activeEntity = {
+                    type: undefined,
+                    entity: undefined,
+                    hierarchy: undefined,
+                }
+                return;
+            }
+            let groupId: string;
+            switch (action.payload.type) {
+                case 'FLASHCARD_SET_GROUP':
+                    groupId = (action.payload.entity as FlashcardSetGroupModel).id;
+                    break;
+                case 'FLASHCARD_SET':
+                    groupId = (action.payload.entity as FlashcardSetModel).groupId;
+                    break;
+                default:
+                    throw new Error(`Unrecognized entity type: ${action.payload.type}`);
+            }
+            state.activeEntity = {
+                type: action.payload.type,
+                entity: action.payload.entity,
+                hierarchy: groupUtil.buildHierarchyFromGroup(state.value, groupId),
+            }
+            console.debug(state.activeEntity.hierarchy);
+        }
     }
 });
 
@@ -171,6 +216,7 @@ export const {
     deleteGroup,
     deleteSet,
     deleteFlashcard,
+    setActiveEntity,
 } = flashcardSetGroupSlice.actions;
 
 // Selectors
@@ -186,5 +232,6 @@ export const selectFlashcardSet = (state: RootState, groupId: string, setId: str
         }
     }
 }
+export const selectActiveEntity = (state: RootState) => state.flashcardSetGroup.activeEntity;
 
 export default flashcardSetGroupSlice.reducer;
