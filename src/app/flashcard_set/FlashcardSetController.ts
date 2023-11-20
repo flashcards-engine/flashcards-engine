@@ -27,6 +27,7 @@ export default class FlashcardSetController extends Controller {
         super();
         this.flaschardSetService = flashcardSetService;
     }
+    
     getHandlerMappings(): HandlerMapping[] {
         return [
             {

@@ -29,6 +29,7 @@ export default class FlashcardSetGroupController extends Controller {
         super();
         this.flashcardSetGroupService = flashcardSetGroupService;
     }
+
     getHandlerMappings(): HandlerMapping[] {
         return [
             {
@@ -38,7 +39,6 @@ export default class FlashcardSetGroupController extends Controller {
                     return new Promise((resolve, reject) => {
                         resolve(this.flashcardSetGroupService.getByParentId(params.parentId));
                     });
-
                 }
             },
             {

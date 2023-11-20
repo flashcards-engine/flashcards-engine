@@ -42,18 +42,18 @@ export default function Editor({
         <div className="flex-container flex-grow-1 w-100vw min-height-0">
             <div className="flex-basis-30 overflow-scroll striped border-right">
                 {
-                        rootFlashcardSetGroup
-                            ? <FlashcardSetGroup
-                                flashcardSetGroup={rootFlashcardSetGroup}
-                                isInitiallyOpen={true}
-                                onSelectHandler={setActiveEntityHandler}
-                                selectableTypes={['FLASHCARD_SET_GROUP', 'FLASHCARD_SET']}
-                                activeEntityId={activeEntity?.id}
-                                activeEntityHierarchy={activeEntityHierarchy}
-                                highlightSelected={true}
-                            />
-                            : null
-                    }
+                    rootFlashcardSetGroup
+                        ? <FlashcardSetGroup
+                            flashcardSetGroup={rootFlashcardSetGroup}
+                            isInitiallyOpen={true}
+                            onSelectHandler={setActiveEntityHandler}
+                            selectableTypes={['FLASHCARD_SET_GROUP', 'FLASHCARD_SET']}
+                            activeEntityId={activeEntity?.id}
+                            activeEntityHierarchy={activeEntityHierarchy}
+                            highlightSelected={true}
+                        />
+                        : null
+                }
             </div>
             <div className="flex-container flex-basis-40 flex-grow-1">
                 <div key={activeEntity?.id} className="flex-container flex-column flex-grow-1 position-relative">

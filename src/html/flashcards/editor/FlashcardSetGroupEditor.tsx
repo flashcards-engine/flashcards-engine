@@ -94,7 +94,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
             <div className="overflow-scroll flex-grow-1">
                 <div>Editing flashcard set group</div>
                 <form className="flex-container flex-column">
-                    <label>
+                    <label className="flex-container flex-column">
                         Name:
                         <input
                             id="group-name"
@@ -106,6 +106,7 @@ export default function FlashcardSetGroupEditor({flashcardSetGroup}: FlashcardSe
                         ></input>
                     </label>
                 </form>
+                <div className="spacer"></div>
             </div>
             <div className="flex-container flex-gap-5px">
                 <button

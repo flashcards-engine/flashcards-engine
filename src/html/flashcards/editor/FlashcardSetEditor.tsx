@@ -219,7 +219,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
             <div className="overflow-scroll flex-grow-1">
                 <div>Editing flashcard set</div>
                 <form className="flex-container flex-column">
-                    <label>
+                    <label className="flex-container flex-column">
                         Name:
                         <input
                             id="set-name"
@@ -267,6 +267,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                         )
                     }
                 </form>
+                <div className="spacer"></div>
             </div>
             <div className="flex-container flex-gap-5px">
                 <button disabled={lockInfo.isLocked} onClick={addFlashcardHandler}>New flashcard</button>

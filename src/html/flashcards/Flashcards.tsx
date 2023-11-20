@@ -94,11 +94,13 @@ export default function Flashcards() {
         <main className="flex-container flex-column flex-grow-1">
             {
                 activeFlashcardSession
-                    ? <div id="flashcard" className="flex-container position-relative justify-content-center align-items-center flex-grow-1 w-100vw min-height-0">
+                    ? <div id="flashcard" className="flex-container position-relative justify-content-center flex-grow-1 min-height-0 w-100vw">
                         <div id="exit-flashcard" onClick={exitSession}>
                             <FontAwesomeIcon icon={faXmark} />
                         </div>
-                        {activeFlashcardText}
+                        <pre className="flex-container justify-content-center align-items-center flex-grow-1 vertical-scroll p-1rem pre-wrap margin-0 text-justify sans-serif">
+                            {activeFlashcardText}
+                        </pre>
                     </div>
                     : <Editor
                         rootFlashcardSetGroup={rootFlashcardSetGroup}

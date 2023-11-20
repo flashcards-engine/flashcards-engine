@@ -104,7 +104,7 @@ export default function FlashcardSetGroup({
                     {
                         flashcardSetGroup.name
                             ? flashcardSetGroup.name
-                            : <i className="text-gray">{'<untitled group>'}</i>
+                            : <i className="text-gray">{'untitled group'}</i>
                     }
                 </div>
             </div>
@@ -175,7 +175,7 @@ function FlashcardSet({flashcardSet, indentation, selectableTypes, onSelectHandl
             {
                 flashcardSet.name
                     ? flashcardSet.name
-                    : <i className="text-gray">{'<untitled flashcard set>'}</i>
+                    : <i className="text-gray">{'untitled flashcard set'}</i>
             }
         </div>
     )
