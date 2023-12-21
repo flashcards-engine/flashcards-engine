@@ -6,7 +6,6 @@ import FlashcardSetGroupModel from '../../common/types/FlashcardSetGroupModel.js
 
 interface GetAllParams {
     parentId?: string;
-    isRoot?: boolean;
 }
 
 interface PostSingleParams {
