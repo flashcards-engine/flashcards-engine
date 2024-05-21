@@ -233,7 +233,7 @@ export default function FlashcardSetEditor({flashcardSet}: FlashcardSetEditorPro
                     {
                         workingFlashcardSet.flashcards.map((flashcard) =>
                             <div key={flashcard.id} className="flex-container flex-column">
-                                <hr />
+                                <br />
                                 <label htmlFor={promptId(flashcard)}>Prompt:</label>
                                 <textarea
                                     key={promptId(flashcard)}

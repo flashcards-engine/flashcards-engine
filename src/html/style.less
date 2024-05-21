@@ -1,8 +1,31 @@
-@lightgray: #eaeaea;
-@darkgray: #747474;
+@lightgray: #151515;
+@darkgray: #303030;
+@text: #dddddd;
+@highlight: #004a6f;
 
 html {
     font-family: sans-serif;
+    background: #000000;
+    color: @text;
+}
+
+::selection {
+    background-color: @highlight !important;
+}
+
+*::-webkit-scrollbar {
+    background: @lightgray;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-track-piece {
+    background: @lightgray;
+}
+
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-button {
+    background: @darkgray;
 }
 
 .flex-container {
@@ -83,7 +106,7 @@ html {
 }
 
 .selected-entity {
-    background: skyblue !important;
+    background: @highlight !important;
 }
 
 .overflow-scroll {
@@ -221,7 +244,7 @@ textarea {
 }
 
 .text-gray {
-    color: @darkgray;
+    color: #878787;
 }
 
 .vertical-scroll {
@@ -243,4 +266,21 @@ textarea {
 .spacer {
     height: calc(100vh - 52px);
     align-self: stretch;
+}
+
+button {
+    background: @lightgray;
+    color: @text;
+}
+
+textarea,
+input {
+    background: @lightgray;
+    color: @text;
+    border: @darkgray;
+}
+
+textarea:focus-visible,
+input:focus-visible {
+    outline: 1px solid @highlight;
 }

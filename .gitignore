@@ -1,10 +1,20 @@
+# Project libraries
 node_modules
+
+# macOs filesystem files
 */.DS_Store
 .DS_Store
+
+# Build artifacts
 out/*
 build/*
-flashcards.db
 dist
+
+# Database file and working database files
+flashcards.db
 *-shm
 *-wal
 *.db
+
+# IDE and Editor specific files
+.idea
