@@ -4,7 +4,9 @@ flashcards in a way which resembles a filesystem. You can create groupings of
 flashcard sets, and nest groupings within one another like folders.
 
 Flashcards engine can be a useful study tool as it provides a great deal of
-flexibility in how you organize your flashcards.
+flexibility in how you organize your flashcards, mirroring exactly the 
+structure of your learning plan in order to best design an approach to 
+learning new topics.
 
 To install Flashcards Engine, see below section [How to install](#how-to-install).
 
