@@ -12,8 +12,6 @@ flexibility in how you organize your flashcards, mirroring exactly the
 structure of your learning plan in order to best design an approach to 
 learning new topics.
 
-![Screenshot 2024-07-02 at 7 02 20 AM](https://github.com/flashcards-engine/flashcards-engine/assets/11366716/6c3c154f-6ad4-44fa-abaa-f074713aeab1)
-
 To install Flashcards Engine, see below section [How to install](#how-to-install).
 
 To contribute to Flashcards Engine, see the contribution guidelines.
