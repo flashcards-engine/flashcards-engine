@@ -2,9 +2,6 @@
 
 ![Screenshot 2024-07-02 at 7 00 35 AM](https://github.com/flashcards-engine/flashcards-engine/assets/11366716/bc984f68-e5d8-4f0f-832c-9b18e6cb48c2)
 
-![Screenshot 2024-07-02 at 7 02 20 AM](https://github.com/flashcards-engine/flashcards-engine/assets/11366716/6c3c154f-6ad4-44fa-abaa-f074713aeab1)
-
-
 This standalone application makes it possible to create and organize sets of 
 flashcards to an arbitrary depth in a way which resembles a filesystem. You can 
 create groupings of flashcard sets, and nest groupings within one another like 
@@ -14,6 +11,8 @@ Flashcards engine can be a useful study tool as it provides a great deal of
 flexibility in how you organize your flashcards, mirroring exactly the 
 structure of your learning plan in order to best design an approach to 
 learning new topics.
+
+![Screenshot 2024-07-02 at 7 02 20 AM](https://github.com/flashcards-engine/flashcards-engine/assets/11366716/6c3c154f-6ad4-44fa-abaa-f074713aeab1)
 
 To install Flashcards Engine, see below section [How to install](#how-to-install).
 
