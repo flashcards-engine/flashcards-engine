@@ -6,8 +6,9 @@
 
 
 This standalone application makes it possible to create and organize sets of 
-flashcards in a way which resembles a filesystem. You can create groupings of
-flashcard sets, and nest groupings within one another like folders.
+flashcards to an arbitrary depth in a way which resembles a filesystem. You can 
+create groupings of flashcard sets, and nest groupings within one another like 
+folders.
 
 Flashcards engine can be a useful study tool as it provides a great deal of
 flexibility in how you organize your flashcards, mirroring exactly the 
